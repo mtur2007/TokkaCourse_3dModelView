@@ -98,7 +98,7 @@ renderer.outputColorSpace = THREE.SRGBColorSpace;         // 既存の行があ�
 // 昼の環境マップ（初期）
 renderer.outputEncoding = THREE.sRGBEncoding;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.physicallyCorrectLights = true;
+renderer.physicallyCorrectLights = false;
 
 // PMREMGenerator を一つだけ作って使い回すのが良い
 const pmremGenerator = new THREE.PMREMGenerator(renderer);

@@ -26,14 +26,79 @@ camera.position.set(8, 6, 12);
 // const controls = new OrbitControls(camera, renderer.domElement);
 // controls.enableDamping = true;
 
+let envMap
 const textur_loader = new THREE.TextureLoader();
 textur_loader.load('textures/moon_lab.jpg', (texture) => {
     texture.mapping = THREE.EquirectangularReflectionMapping;
     texture.colorSpace = THREE.SRGBColorSpace;
     scene.background = texture;
     scene.environment = texture;
-    // envMap = texture;
+    envMap = texture;
   });
+
+let envMapNight
+textur_loader.load('textures/night.jpg', (texture) => {
+    texture.mapping = THREE.EquirectangularReflectionMapping;
+    texture.colorSpace = THREE.SRGBColorSpace;
+    scene.background = texture;
+    scene.environment = texture;
+    envMapNight = texture;
+  });
+
+// --- 昼夜切替 ---
+let isNight = false;
+
+const toggleBtn = document.getElementById("toggle-daynight");
+
+toggleBtn.addEventListener("click", () => {
+  isNight = !isNight;
+
+  if (isNight) {
+    // 🌙 夜モード
+    scene.background = envMapNight;
+    scene.environment = envMapNight;
+    
+    dirLight.visible = false;
+    // ambient.visible = false;
+
+    toggleBtn.textContent = "☀️ 昼にする";
+
+  } else {
+    // ☀️ 昼モード
+    scene.background = envMap;
+    scene.environment = envMap;
+
+    dirLight.visible = true;
+    // ambient.visible = true;
+
+    toggleBtn.textContent = "🌙 夜にする";
+  }
+});
+
+toggleBtn.addEventListener("touchstart", () => {
+  isNight = !isNight;
+
+  if (isNight) {
+    // 🌙 夜モード
+    scene.background = envMapNight;
+    scene.environment = envMapNight;
+
+    dirLight.visible = false;
+    // ambient.visible = false;
+
+    toggleBtn.textContent = "☀️ 昼にする";
+
+  } else {
+    // ☀️ 昼モード
+    scene.background = envMap;
+    scene.environment = envMap;
+
+    dirLight.visible = true;
+    // ambient.visible = true;
+
+    toggleBtn.textContent = "🌙 夜にする";
+  }
+});
 
 // ライト
 scene.add(new THREE.AmbientLight(0xffffff, 0.35));
