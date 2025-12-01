@@ -247,7 +247,7 @@ async function loadModelToScene(modelUrl, options = {}, adjustment=true, sinkans
 
 // // --------------- 実行例：model.glb を読み込む ----------------
 // ここのファイル名をあなたの .glb の名前に変えてください
-loadModelToScene('test.glb', { autoCenter: true, autoScaleMax: 10000, scaleIfLarge: 0.001 })
+loadModelToScene('tokka_class.glb', { autoCenter: true, autoScaleMax: 10000, scaleIfLarge: 0.001 })
   .then((root) => {
     console.log('GLB loaded and added to scene:', root);
   })

@@ -1,226 +1,496 @@
-// ====== Imports ======
-import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js';
+// main.js
+"toggle-daynight"
 
-import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/loaders/GLTFLoader.js';
-// import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/controls/OrbitControls.js';
+// モバイルデバッグ用　ログ画面出力
 
-import RAPIER from 'https://cdn.skypack.dev/@dimforge/rapier3d-compat';
+// const ctrl = document.getElementById('controller');
 
-// ====== Three.js 基本セットアップ ======
+// let logwindow = document.getElementById("logwindow");
+// logwindow.hidden = true
+
+// const log_hidden = document.getElementById("log");
+
+// let text = ''
+
+// function alert(txt){
+//   text += txt+'\n'
+//   logwindow.innerText = txt//keepLastNLines(text)
+// }
+
+// function keepLastNLines(text, maxLines = 20, options = {}) {
+//   const {
+//     treatEscapedNewline = false,
+//     normalizeLineEndings = true,
+//     joinWith = '\n'
+//   } = options;
+
+//   if (text == null) return '';
+
+//   let s = String(text);
+
+//   // オプション: "\\n" を実改行に変換
+//   if (treatEscapedNewline) {
+//     s = s.replace(/\\r\\n/g, '\r\n').replace(/\\r/g, '\r').replace(/\\n/g, '\n');
+//   }
+
+//   // 改行をLFに正規化
+//   if (normalizeLineEndings) {
+//     s = s.replace(/\r\n/g, '\n').replace(/\r/g, '\n')
+//          .replace(/\u2028/g, '\n').replace(/\u2029/g, '\n').replace(/\u0085/g, '\n');
+//   }
+
+//   const lines = s.split('\n'); // 空行も 1 行としてカウント
+//   if (lines.length <= maxLines) return lines.join(joinWith);
+
+//   // 末尾 maxLines を残す（先頭の余分を削除）
+//   const kept = lines.slice(lines.length - maxLines);
+//   return kept.join(joinWith);
+// }
+
+// log_hidden.addEventListener("touchstart", () => {
+//   if (logwindow.hidden){
+//     let txt = ''
+//     const max_len = 10
+//     for (let i = 0; i < group_targetObjects.length; i++){
+//       const cdnt_0 = group_targetObjects[i][0].position
+//       const cdnt_1 = group_targetObjects[i][1].position
+
+//       txt += '['+ i + '] { x: '+String(cdnt_0.x).slice(0, max_len) +', y: ' +String(cdnt_0.y).slice(0, max_len)+', z: ' +String(cdnt_0.z).slice(0, max_len) + '},'
+//       txt += '{ x: '+String(cdnt_1.x).slice(0, max_len) +', y: ' +String(cdnt_1.y).slice(0, max_len)+', z: ' +String(cdnt_1.z).slice(0, max_len) + '}\n'
+//     }
+//     alert(txt)
+//   }
+//   logwindow.hidden = !logwindow.hidden
+// });
+
+import * as THREE from 'three';
+const scene = new THREE.Scene();
 
 const canvas = document.getElementById('three-canvas');
 const renderer = new THREE.WebGLRenderer({ canvas });
+renderer.setSize(window.innerWidth, window.innerHeight);
 
-// const renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setPixelRatio(devicePixelRatio);
-renderer.setSize(innerWidth, innerHeight);
-renderer.shadowMap.enabled = true;
-document.body.appendChild(renderer.domElement);
+import { WorldCreat } from './world_creat.js';
+await WorldCreat(scene);
 
-const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x0b1020);
+const dirLight = scene.getObjectByName('dirLight');
 
-const camera = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 0.1, 500);
-camera.position.set(8, 6, 12);
+// ----------------- シャドウを有効化（renderer を作った直後あたりに入れる） -----------------
+renderer.shadowMap.enabled = true;                         // シャドウを有効化
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;         // ソフトシャドウ（見た目良し・負荷中）
+renderer.outputColorSpace = THREE.SRGBColorSpace;         // 既存の行があるなら残す
 
-// const controls = new OrbitControls(camera, renderer.domElement);
-// controls.enableDamping = true;
+// --- マップの半自動作成(路線設定) ---
 
-const textur_loader = new THREE.TextureLoader();
-textur_loader.load('textures/moon_lab.jpg', (texture) => {
+// 座標感覚の可視化
+// Map_pin(10,10,20,0.2,0xff0000)
+// Map_pin(10,10,10,0.5,0xff0000)
+
+// Map_pin(-10,10,20,0.2,0xff0000)
+// Map_pin(-10,10,10,0.5,0x0000ff)
+
+// Map_pin(-10,-10,20,0.2,0x0000ff)
+// Map_pin(-10,-10,10,0.5,0x0000ff)
+
+// Map_pin(10,-10,20,0.2,0x0000ff)
+// Map_pin(10,-10,10,0.5,0xff0000)
+
+// 昼の環境マップ（初期）
+renderer.outputEncoding = THREE.sRGBEncoding;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.physicallyCorrectLights = true;
+
+// PMREMGenerator を一つだけ作って使い回すのが良い
+const pmremGenerator = new THREE.PMREMGenerator(renderer);
+pmremGenerator.compileEquirectangularShader();
+
+let envMap = null
+let envMapNight = null
+const loader = new THREE.TextureLoader();
+  loader.load('textures/skyy.jpg', (texture) => {
     texture.mapping = THREE.EquirectangularReflectionMapping;
     texture.colorSpace = THREE.SRGBColorSpace;
     scene.background = texture;
     scene.environment = texture;
-    // envMap = texture;
+    envMap = texture;
   });
 
-// ライト
-scene.add(new THREE.AmbientLight(0xffffff, 0.35));
-const dir = new THREE.DirectionalLight(0xffffff, 1.0);
-dir.position.set(6, 12, 8);
-dir.castShadow = true;
-dir.shadow.mapSize.set(2048, 2048);
-scene.add(dir);
+loader.load('textures/moonless_golf.jpg', (texture_night) => {
+  texture_night.mapping = THREE.EquirectangularReflectionMapping;
+  texture_night.colorSpace = THREE.SRGBColorSpace;
+  // scene.background = texture_night;
+  // scene.environment = texture_night;
+  envMapNight = texture_night ;
+});
 
-// マテリアル共通
-const groundMat = new THREE.MeshStandardMaterial({ color: 0x2b2f3a, roughness: 0.9, metalness: 0.0 });
-const ballMat   = new THREE.MeshStandardMaterial({ color: 0xffcc55, roughness: 0.4, metalness: 0.1 });
+// envMap = envMapNight
 
-// import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+scene.background = envMapNight;
+scene.environment = envMapNight;
 
-// 地面（見た目）
-const groundMesh = new THREE.Mesh(
-  new THREE.BoxGeometry(100, 2, 100),
-  groundMat,
-);
-groundMesh.receiveShadow = true;
-groundMesh.position.y = -1;
-scene.add(groundMesh);
+scene.background = envMap;
+scene.environment = envMap;
 
-// 軽い目印のグリッド
-const grid = new THREE.GridHelper(100, 100, 0x5577aa, 0x224466);
-grid.position.y = -0.99;
-scene.add(grid);
+renderer.toneMappingExposure = 1;
 
-// ボール（見た目）
-// const radius = 0.3;
-const radius = 0.3;
-const ballMesh = new THREE.Mesh(
-  new THREE.SphereGeometry(radius, 32, 16),
-  ballMat
-);
-ballMesh.castShadow = true;
-scene.add(ballMesh);
+console.log('WorldCreat')
 
-// ====== Rapier 物理セットアップ ======
-await RAPIER.init();
-const world = new RAPIER.World({ x: 0, y: -9.81, z: 0 });
+// world_creat()
 
-const loader = new GLTFLoader();
+// --- ライト追加（初回のみ） ---
+// const ambient = new THREE.AmbientLight(0xffffff, 0.6);
+// scene.add(ambient);
 
-const gltf = await loader.loadAsync('dai.glb');
-const root = gltf.scene;
-scene.add(root);
+// --- 昼夜切替 ---
+let isNight = false;
 
-// 階層のスケール/回転/位置をワールド行列に反映
-root.updateMatrixWorld(true);
+const toggleBtn = document.getElementById("toggle-daynight");
 
-// 3) Rapier の静的トライメッシュをメッシュごとに作る（子まで探索）
-root.traverse((child) => {
-  if (!child.isMesh) return;
-  const geom = child.geometry;
-  if (!geom || !geom.attributes?.position) return;
+toggleBtn.addEventListener("click", () => {
+  isNight = !isNight;
 
-  // 頂点座標（ローカル）をワールドへ変換してから Rapier に渡す
-  const pos = geom.attributes.position;
-  const vertexCount = pos.count;
+  if (isNight) {
+    // 🌙 夜モード
+    scene.background = envMapNight;
+    scene.environment = envMapNight;
+    
+    dirLight.visible = false;
+    // ambient.visible = false;
 
-  // 頂点（x,y,zのフラット配列）を作成
-  const vertices = new Float32Array(vertexCount * 3);
-  const v = new THREE.Vector3();
-  for (let i = 0; i < vertexCount; i++) {
-    v.fromBufferAttribute(pos, i).applyMatrix4(child.matrixWorld);
-    vertices[i * 3 + 0] = v.x;
-    vertices[i * 3 + 1] = v.y;
-    vertices[i * 3 + 2] = v.z;
-  }
+    toggleBtn.textContent = "☀️ 昼にする";
 
-  // インデックス（三角形の頂点番号列）
-  let indices;
-  if (geom.index) {
-    // 既存のインデックスを流用（Uint32にしておくと安全）
-    const src = geom.index.array;
-    indices = (src.BYTES_PER_ELEMENT === 4) ? src : new Uint32Array(src);
   } else {
-    // 非インデックス化ジオメトリなら、連番インデックスを生成
-    // → 3頂点ごとに1三角形を想定
-    const triCount = Math.floor(vertexCount / 3);
-    indices = new Uint32Array(triCount * 3);
-    for (let i = 0; i < triCount * 3; i++) indices[i] = i;
+    // ☀️ 昼モード
+    scene.background = envMap;
+    scene.environment = envMap;
+
+    dirLight.visible = true;
+    // ambient.visible = true;
+
+    toggleBtn.textContent = "🌙 夜にする";
   }
-
-  // Rapier の固定ボディ＋トライメッシュコライダー（地面用途なら fixed 推奨）
-  const body = world.createRigidBody(RAPIER.RigidBodyDesc.fixed());
-  const collider = RAPIER.ColliderDesc.trimesh(vertices, indices);
-  world.createCollider(collider, body);
 });
 
-// 反発と摩擦のデフォルトを少し設定（床材っぽく）
-world.integrationParameters.dt = 1/60; // 固定タイムステップ
+toggleBtn.addEventListener("touchstart", () => {
+  isNight = !isNight;
 
-// 地面（固定ボディ）
-const groundBody = world.createRigidBody(
-  RAPIER.RigidBodyDesc.fixed().setTranslation(0, -1, 0)
-);
+  if (isNight) {
+    // 🌙 夜モード
+    scene.background = envMapNight;
+    scene.environment = envMapNight;
 
-// コライダー（ここに摩擦などを設定）
-const groundCollider = world.createCollider(
-  RAPIER.ColliderDesc.cuboid(10, 1, 10)  // 形状
-    .setFriction(0.8)                     // 摩擦
-    .setRestitution(0.0),                 // 跳ねない
-  groundBody                               // ← ここでボディに紐づける
-);
+    dirLight.visible = false;
+    // ambient.visible = false;
 
-// Box の半径指定（幅/2, 高さ/2, 奥行き/2）
-const groundCol = RAPIER.ColliderDesc.cuboid(50, 1, 50)
-  .setFriction(0.9)
-  .setRestitution(0.1);
-world.createCollider(groundCol, groundBody);
+    toggleBtn.textContent = "☀️ 昼にする";
 
-// ボール（動的ボディ）
-const ballBody = world.createRigidBody(
-  RAPIER.RigidBodyDesc.dynamic().setTranslation(0, 3, 0)
-);
-ballBody.enableCcd(true); // すり抜け防止
-const ballCol = RAPIER.ColliderDesc.ball(radius)
-  .setFriction(0.6)
-  .setRestitution(0.55)
-  // .setDensity(7800)
-  .setDensity(2000)
-  // .setMass(0.6); // 7800 kg/m^3 をそのまま使うと「ほぼリアル鉄」
-world.createCollider(ballCol, ballBody);
+  } else {
+    // ☀️ 昼モード
+    scene.background = envMap;
+    scene.environment = envMap;
 
-// ====== 入力：投げる／リセット ======
-function throwForward(power = 8, up = 4) {
-  // カメラの向いている方向ベクトルを取得
-  const dir = new THREE.Vector3();
-  camera.getWorldDirection(dir);
-  dir.normalize();
+    dirLight.visible = true;
+    // ambient.visible = true;
 
-  // カメラの少し前（2m先）からボールを出す
-  const origin = camera.position.clone().add(dir.clone().multiplyScalar(2));
-
-  // ボールの位置と速度を設定
-  ballBody.setTranslation({ x: origin.x, y: origin.y, z: origin.z }, true);
-
-  // dirベクトル方向に投げる + 上方向の力を少し加える
-  const velocity = {
-    x: dir.x * power,
-    y: dir.y * power + up, // 視線に沿って上方向を少し足す
-    z: dir.z * power
-  };
-  ballBody.setLinvel(velocity, true);
-
-  // ボールに軽く回転をつける（視線方向と関係なし）
-  ballBody.setAngvel({ x: 3, y: 0.5, z: 0 }, true);
-}
-
-function resetBall() {
-  ballBody.setTranslation({ x: 0, y: 5, z: 0 }, true);
-  ballBody.setLinvel({ x: 0, y: 0, z: 0 }, true);
-  ballBody.setAngvel({ x: 0, y: 0, z: 0 }, true);
-
-  if (ballBody.resetForces)  ballBody.resetForces(true);
-  if (ballBody.resetTorques) ballBody.resetTorques(true);
-  
-}
-
-addEventListener('keydown', (e) => {
-  if (e.code === 'Space') throwForward(8, 4); // 標準投げ
-  if (e.code === 'KeyR') resetBall();
+    toggleBtn.textContent = "🌙 夜にする";
+  }
 });
 
-addEventListener('click', () => {
-  // クリック時は少し強めに
-  throwForward(12, 5);
-});
+const camera = new THREE.PerspectiveCamera(
+  75, window.innerWidth / window.innerHeight, 0.1, 1000
+);
 
-// ====== ループ ======
-const tmp = new THREE.Vector3();
+document.body.appendChild(renderer.domElement);
 
-// リサイズ
-addEventListener('resize', () => {
-  camera.aspect = innerWidth / innerHeight;
+let run_STOP = false
+let quattro = 0
+let run_num = 0
+
+// --- リサイズ対応 ---
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
-  renderer.setSize(innerWidth, innerHeight);
+  renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-// 初期表示：軽く投げておく
-// setTimeout(() => throwForward(6, 3.5), 300);
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-// ===== 視点 =====
+// レイキャストを作成
+const raycaster = new THREE.Raycaster();
+let pause = false;
 
+// すべてのボタンに hover 検出を付ける
+const buttons = document.querySelectorAll("button");
+
+buttons.forEach(btn => {
+  btn.addEventListener("mouseenter", () => {
+    pause = true; // 一時停止
+  });
+
+  btn.addEventListener("mouseleave", () => {
+    pause = false; // 再開
+  });
+});
+
+buttons.forEach(btn => {
+  // 指がボタンに触れたとき（mouseenter 相当）
+  btn.addEventListener("touchstart", (e) => {
+    e.preventDefault(); // ページスクロールを防止
+    pause = true; // 一時停止
+  }, { passive: false });
+
+  // 指がボタンから離れたとき（mouseleave 相当）
+  btn.addEventListener("touchend", () => {
+    pause = false; // 再開
+  });
+
+  // タッチがキャンセルされたとき（例: 指が画面外にずれた）
+  btn.addEventListener("touchcancel", () => {
+    pause = false; // 再開
+  });
+});
+
+// モード状態（例）
+let OperationMode = 0;
+
+let polePlacementMode = false;
+let editObject = 'Standby'
+// let trackEditSubMode = 'CREATE_NEW'; // 'CREATE_NEW' or 'MOVE_EXISTING'
+let objectEditMode = 'Standby'; // 'CREATE_NEW' or 'MOVE_EXISTING'
+
+// リサイズ変更
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth/window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+export function UIevent (uiID, toggle){
+  if ( uiID === 'see' ){ if ( toggle === 'active' ){
+    console.log( 'see _active' )
+    OperationMode = 0
+    search_object = false
+    choice_object = false
+    dragging = false
+    setMeshListOpacity(targetObjects, 0.0);
+
+  } else {
+    console.log( 'see _inactive' )
+  }} else if ( uiID === 'edit' ){ if ( toggle === 'active' ){
+    console.log( 'edit _active' )
+    OperationMode = 1
+  } else {
+    console.log( 'edit _inactive' )
+  }} else if ( uiID === 'rail' ){ if ( toggle === 'active' ){
+    console.log( 'rail _active' +'_'+ search_object)
+    move_direction_y = false
+    setMeshListOpacity(targetObjects, 1);
+    editObject = 'RAIL'
+ 
+  } else {
+    console.log( 'rail _inactive' )
+    setMeshListOpacity(targetObjects, 0);
+    search_object = false
+    move_direction_y = false
+    editObject = 'Standby'
+
+  }} else if ( uiID === 'new' ){ if ( toggle === 'active' ){
+    console.log( 'new _active' )
+    objectEditMode = 'CREATE_NEW'
+    search_object = false
+
+  } else {
+    console.log( 'new _inactive' )
+
+  }} else if ( uiID === 'move' ){ if ( toggle === 'active' ){
+    console.log( 'move _active' )
+    objectEditMode = 'MOVE_EXISTING'
+
+    search_object = true
+    search_point();
+
+  } else {
+    console.log( 'move _inactive' )
+    search_object = false
+    move_direction_y = false
+
+    objectEditMode = 'Standby'
+
+  }} else if ( uiID === 'x_z' ){ if ( toggle === 'active' ){
+    console.log( 'x_z _active' )
+    move_direction_y = false
+  } else {
+    console.log( 'x_z _inactive' )
+    search_object = false
+  }} else if ( uiID === 'y' ){ if ( toggle === 'active' ){
+    console.log( 'y _active' )
+    move_direction_y = true
+  } else {
+    console.log( 'y _inactive' )
+    search_object = false
+  }} else if ( uiID === 'poll' ){ if ( toggle === 'active' ){
+  console.log( 'poll _active' )
+  } else {
+  console.log( 'poll _inactive' )
+  }} else if ( uiID === 'new/2' ){ if ( toggle === 'active' ){
+  console.log( 'new/2 _active' )
+  } else {
+  console.log( 'new/2 _inactive' )
+  }} else if ( uiID === 'move/2' ){ if ( toggle === 'active' ){
+  console.log( 'move/2 _active' )
+  } else {
+  console.log( 'move/2 _inactive' )
+  }} else if ( uiID === 'x_z/2' ){ if ( toggle === 'active' ){
+  console.log( 'x_z/2 _active' )
+  } else {
+  console.log( 'x_z/2 _inactive' )
+  }} else if ( uiID === 'y/2' ){ if ( toggle === 'active' ){
+  console.log( 'y/2 _active' )
+  } else {
+  console.log( 'y/2 _inactive' )
+  }} else if ( uiID === 'creat' ){ if ( toggle === 'active' ){
+  console.log( 'creat _active' )
+    // const tilt = [
+    // new THREE.Vector3(1, 10, -4),
+    // new THREE.Vector3(0, 10, -2),
+    // ]
+    // const pos = new THREE.CatmullRomCurve3(tilt);
+    // resetMeshListOpacity(targetObjects, tilt);
+    // setMeshListOpacity(targetObjects, 1);
+
+    // TSys.createTrack(pos,0,0xff0000)
+
+    editObject = 'ORIGINAL'
+    targetObjects = group_object
+    setMeshListOpacity(targetObjects, 1);
+
+  } else {
+    console.log( 'creat _inactive' )
+    // targetObjects = []
+    setMeshListOpacity(targetObjects, 0);
+    editObject = 'Standby'
+
+  }} else if ( uiID === 'sphere' ){ if ( toggle === 'active' ){
+  console.log( 'sphere _active' )
+  } else {
+  console.log( 'sphere _inactive' )
+  }} else if ( uiID === 'cube' ){ if ( toggle === 'active' ){
+    console.log( 'cube _active' )
+    objectEditMode = 'CREATE_NEW'
+    search_object = false
+    targetObjects = []
+    setMeshListOpacity(targetObjects, 1);
+
+  } else {
+    console.log( 'cube _inactive' )
+    // if (group_EditNow != 'None'){
+    //   console.log('bisible')
+    //   group_targetObjects[group_EditNow][0].visible = false;
+    //   group_targetObjects[group_EditNow][1].visible = false;
+    // }
+
+    console.log('false; '+targetObjects)
+    setMeshListOpacity(targetObjects, 0);
+
+  }} else if ( uiID === 'pick' ){ if ( toggle === 'active' ){
+    console.log( 'pick _active' )
+    objectEditMode = 'PICK'
+
+    search_object = true
+
+    targetObjects = group_object
+    setMeshListOpacity(targetObjects, 1);
+    search_point();
+
+  } else {
+    console.log( 'pick _inactive' )
+
+    search_object = false
+    move_direction_y = false
+
+    objectEditMode = 'Standby'
+
+  }} else if ( uiID === 'move/3' ){ if ( toggle === 'active' ){
+    console.log( 'move/3 _active' )
+    objectEditMode = 'MOVE_EXISTING'
+
+    targetObjects = group_targetObjects[group_EditNow]
+    setMeshListOpacity(targetObjects, 1);
+
+    search_object = true
+    search_point();
+
+  } else {
+    console.log( 'move/3 _inactive' )
+    search_object = false
+    move_direction_y = false
+    setMeshListOpacity(targetObjects, 0);
+
+    objectEditMode = 'Standby'
+
+  }} else if ( uiID === 'x_z/3' ){ if ( toggle === 'active' ){
+    console.log( 'x_z/3 _active' )
+    move_direction_y = false
+  } else {
+    console.log( 'x_z/3 _inactive' )
+;
+  }} else if ( uiID === 'y/3' ){ if ( toggle === 'active' ){
+    console.log( 'y/3 _active' )
+    move_direction_y = true
+    
+  } else {
+    console.log( 'y/3 _inactive' )
+    search_object = false
+  
+  }} else if ( uiID === 'custom' ){ if ( toggle === 'active' ){
+    console.log( 'custom _active' )
+    move_direction_y = false
+    setMeshListOpacity(targetObjects, 1);
+    editObject = 'CUSTOM'
+
+    } else {
+    console.log( 'custom _inactive' )
+
+  }} else if ( uiID === 'new/3' ){ if ( toggle === 'active' ){
+    console.log( 'new/3 _active' )
+    objectEditMode = 'CREATE_NEW'
+    search_object = false
+
+    } else {
+    console.log( 'new/3 _inactive' )
+    search_object = false
+    move_direction_y = false
+
+    objectEditMode = 'Standby'
+
+  }} else if ( uiID === 'move/4' ){ if ( toggle === 'active' ){
+    console.log( 'move/4 _active' )
+    } else {
+    console.log( 'move/4 _inactive' )
+  }} else if ( uiID === 'x_z/4' ){ if ( toggle === 'active' ){
+    console.log( 'x_z/4 _active' )
+    } else {
+    console.log( 'x_z/4 _inactive' )
+  }} else if ( uiID === 'y/4' ){ if ( toggle === 'active' ){
+    console.log( 'y/4 _active' )
+    } else {
+    console.log( 'y/4 _inactive' )
+  }} else if ( uiID === 'construct' ){ if ( toggle === 'active' ){
+    console.log( 'construct _active' )
+    objectEditMode = 'CONSTRUCT'
+
+    search_object = true
+    search_point();
+ 
+    } else {
+    console.log( 'construct _inactive' )
+    objectEditMode = 'Standby'
+    search_object = false
+
+  }}
+}
+
+// 視点操作
 // カメラ操作 ----------------------------------------------------------------
 
 const ctrl_ui = document.getElementById("controller")
@@ -232,8 +502,6 @@ let camera_num = 1
 let ctrl_num = 0
 
 let ctrl_id = null
-
-let dragging = false
 
 function search_ctrl_num(e){
   const touches = e.touches
@@ -250,8 +518,6 @@ function search_ctrl_num(e){
 
 // マウス座標管理用のベクトルを作成
 const mouse = new THREE.Vector2();
-let origin = [0,0]
-let origin_reach = 0
 
 // マウスを動かしたときのイベント
 function handleMouseMove(x, y) {
@@ -267,53 +533,8 @@ function handleMouseMove(x, y) {
   mouse.y = -( clientY / h ) * 2 + 1;
 }
 
-// Aspect_Ratio = window.innerHeight / window.innerWidth 
-
-// デバッグ用 線描画
-function upsertLine(scene, name, start, end, options = {}) {
-  const {
-    color = 0xff0000,
-    linewidth = 1
-  } = options;
-
-  // 既に同名のオブジェクトが存在する場合は削除
-  const old = scene.getObjectByName(name);
-  if (old) {
-    old.geometry.dispose();
-    old.material.dispose();
-    scene.remove(old);
-  }
-
-  // start / end を Vector3 に変換
-  const s = start.isVector3 ? start : new THREE.Vector3(start.x, start.y, start.z);
-  const e = end.isVector3 ? end : new THREE.Vector3(end.x, end.y, end.z);
-
-  const geometry = new THREE.BufferGeometry().setFromPoints([s, e]);
-  const material = new THREE.LineBasicMaterial({ color, linewidth });
-
-  const line = new THREE.Line(geometry, material);
-  line.name = name; // ← 名前を付ける
-
-  scene.add(line);
-
-  return line;
-}
-
 // ジョイコン or 視点 判定 : 物体移動開始
-window.addEventListener('mousedown', (e) => {
-  
-  // UI監視
-  handleMouseMove(e.clientX, e.clientY);
-
-  dragging = true
-  origin = [mouse.x,mouse.y]
-  origin_reach =  0//Math.sqrt(mouse.x**2+mouse.y**2)
-  console.log(origin_reach, mouse.x, mouse.y)
-
-  ctrl_ui.style.left = e.clientX + 'px';
-  ctrl_ui.style.top = e.clientY + 'px';
-
-}, { passive: false });
+// window.addEventListener('mousedown', handleMouseDown);
 
 window.addEventListener('touchstart', (e) => {
 
@@ -324,176 +545,29 @@ window.addEventListener('touchstart', (e) => {
   // 視点
   search_ctrl_num(e)
   if (e.changedTouches[0].identifier != ctrl_id && e.touches.length <= 2){
-    lastPosition1 = { x: e.touches[e.touches.length-1].clientX, y: e.touches[e.touches.length-1].clientY }
+  lastPosition1 = { x: e.touches[e.touches.length-1].clientX, y: e.touches[e.touches.length-1].clientY }
   }
 
   // --- 編集モード
-  // if (OperationMode === 0){return}
-  // e.preventDefault();      // ← スクロールを止める
-  // if (objectEditMode === 'MOVE_EXISTING') { 
-  //   dragging = null//'stand_by';
-  //   onerun_search_point();
-  // }
-
-  dragging = true
-  origin = [mouse.x, mouse.y]
-  origin_reach =  0//Math.sqrt(mouse.x**2+mouse.y**2)
-
-  ctrl_ui.style.left = touch.clientX + 'px';
-  ctrl_ui.style.top = touch.clientY + 'px';
-
+  if (OperationMode === 0){return}
+  e.preventDefault();      // ← スクロールを止める
+  if (objectEditMode === 'MOVE_EXISTING') { 
+    dragging = null//'stand_by';
+    onerun_search_point();
+  }
 
 }, { passive: false });
 
-
-// 重力を角度指定で決める関数
-function gravityFromAngles(theta, phi, g = 9.81) {
-
-  // const theta = THREE.MathUtils.degToRad(thetaDeg); // 方位角
-  // const phi   = THREE.MathUtils.degToRad(phiDeg);   // 傾き角
-
-  // 球座標→直交座標
-  const gx = g * Math.sin(phi) * Math.cos(theta);
-  const gy = -g * Math.cos(phi);
-  const gz = g * Math.sin(phi) * Math.sin(theta);
-
-  return { x: gx, y: gy, z: gz };
-}
 
 // 位置&視点 操作 : 物体移動追尾
 document.addEventListener('mousemove', (e) => {
   
   // UI監視 編集モード
   handleMouseMove(e.clientX, e.clientY);
-
-  if (AngleMode === 'TURNING' && dragging){
-  
-    // let radius = Math.atan2(mouse.x,mouse.y)
-
-    // let diffX = mouse.x - origin[0]
-    // let diffY = mouse.y - origin[1]
-
-    const diff_points = [mouse.x- origin[0],mouse.y- origin[1]]
-    const radius = Math.atan2(diff_points[0],diff_points[1])
-    const reach = Math.sqrt(diff_points[0]**2 + diff_points[1]**2)
-
-    const beside_incline = Math.sin(radius) * reach
-    const vertical_incline = Math.cos(radius) * reach
-
-    // console.log('/_ : '+radius + ' _#_ = : ' + vertical_incline + ' _#_ || : ' + beside_incline)
-    // console.log('/_ : '+radius + '[===] : ' + origin_reach + ' {---} : ' + reach_diff)
-    // if (radius > 90* Math.PI/180 || radius > 270* Math.PI/180 ){
-    //   console.log("//")
-    // //   radius = (radius - Math.PI)
-    // }
-    // const rength = Math.sqrt(mouse.x**2 + mouse.y**2)
-
-    cameraAngleZ = Math.max(Math.min(beside_incline, 30* Math.PI/180), -30* Math.PI/180)
-    // console.log(vertical_incline, Math.cos(radius),reach_diff)
-    cameraAngleX = Math.min(vertical_incline - 15* Math.PI/180 , 0)
-
-    camera.position.x = 0
-
-    // console.log( Math.sin(vertical_incline * (60*Math.PI/180) + 15*Math.PI/180)* 20)
-
-    // camera.position.z = Math.min(Math.sin((mouse.y - origin[1])*(10*Math.PI/180) + 15*Math.PI/180 ) * 80, 27)
-    // camera.position.y = Math.max((mouse.y - origin[1]) * -20 + 10, 0) //Math.cos(vertical_incline) * 20 - 20
-
-    camera.position.z = Math.sin(Math.min(vertical_incline,0.3) * (75*Math.PI/180) + 75*Math.PI/180) * 15 +5
-
-    // console.log(Math.sin(Math.min(vertical_incline,0.3) * (75*Math.PI/180) + 75*Math.PI/180) * 15 +5)
-
-    camera.position.y = Math.cos(Math.min(vertical_incline,0.3) * (75*Math.PI/180) + 75*Math.PI/180) * 15 +5
-    
-    // console.log(reach)
-
-    // 例：前方(0°)方向に20°傾けた重力
-    // const gravityVec = gravityFromAngles(radius - 90*Math.PI/180, Math.max(Math.min(reach*1.1,1),-1));
-    // const gravityVec = gravityFromAngles(radius - 90*Math.PI/180, Math.max(Math.min(reach*0.55,0.3),-0.3) );
-    // console.log(radius)
-
-    if (false){
-      // 1 回目の実行：ラインを追加
-      const pulus = 1.8
-      const route_Y = radius - Math.PI
-      const route_X = (beside_incline*pulus) + Math.PI
-      const route_Z = (vertical_incline*pulus) + Math.PI //+ 15* Math.PI/180
-
-      // const reach_hight =  3.8
-      const reach_hight =  5
-
-      console.log(beside_incline,Math.PI)
-
-      upsertLine(
-        scene,
-        "route_Y_Line",
-        { x: 0, y: reach_hight, z: 0 },
-        { x: Math.sin(route_Y)*-reach_hight, y: reach_hight, z: Math.cos(route_Y)*reach_hight },
-        { color: 0x00ff00, linewidth: 10 }
-      );
-      upsertLine(
-        scene,
-        "route_Y_sub_Line",
-        { x: 0, y: 10, z: 0 },
-        { x: 0, y: 0, z: 0},
-        { color: 0xff0000, linewidth: 10 }
-      );
-
-      upsertLine(
-        scene,
-        "route_Z_sub_Line",
-        { x: 0, y: reach_hight, z: 0 },
-        // { x: Math.sin(route_X)*-5, y:  Math.cos(route_X)*5, z: 0},
-        // { x: 0, y:  Math.cos(route_Z)*5, z: Math.sin(route_Z)*-5},
-        { x:  Math.sin(route_X)*-reach_hight, y:  (Math.cos(route_X)*reach_hight + Math.cos(route_Z)*reach_hight)/2, z: Math.sin(route_Z)*reach_hight},
-        { color: 0x0000ff, linewidth: 10 }
-      );
-    }
-
-    const pulus = 0.8
-    const route_X = (beside_incline*pulus) + Math.PI
-    const route_Z = (vertical_incline*pulus) + Math.PI //+ 15* Math.PI/180
-
-    // const g = 9.81
-    const g = 9.81
-
-    world.gravity = { x:  Math.sin(route_X)*-g, y:  (Math.cos(route_X)*g + Math.cos(route_Z)*g)/2, z: Math.sin(route_Z)*g};
-    // world.gravity = gravityVec
-    // console.log(radius,vertical_incline)
-
-    // console.log(Math.sin((mouse.y - origin[1])*(10*Math.PI/180) + 15*Math.PI/180 ) * 80)
-    // console.log(Math.cos(vertical_incline) * 20)
-
-    // ------
-
-    // const radius = Math.atan2(mouse.x,mouse.y)
-    // const reach = Math.sqrt(mouse.x**2+mouse.y**2)
-
-    // const reach_diff = reach - origin_reach
-
-    // const beside_incline = Math.sin(radius) * reach_diff
-    // const vertical_incline = Math.cos(radius) * reach_diff
-
-    // cameraAngleZ = Math.max(Math.min(beside_incline, 30* Math.PI/180), -30* Math.PI/180)
-    // console.log(vertical_incline, Math.cos(radius),reach_diff)
-    // cameraAngleX =Math.min(vertical_incline  - 15* Math.PI/180 , 30* Math.PI/180)
-
-    // camera.position.x = 0
-    // camera.position.z = 20
-    // console.log(Math.cos(vertical_incline) * 20)
-    // camera.position.y = mouse.y * -20 + 10 //Math.cos(vertical_incline) * 20 - 20
-
-  }
-
 });
 
-// レイキャストを作成
-const raycaster = new THREE.Raycaster();
-let RayHitPoint = [0,0]
-
 document.addEventListener('touchmove', (e) => {
-
-  // e.preventDefault();
+  e.preventDefault();
 
   // UI監視
   const touch = e.touches[0];
@@ -502,52 +576,22 @@ document.addEventListener('touchmove', (e) => {
   // console.log('see'+ dragging)
 
   // 視点
-  if (AngleMode === 'FREE'){
-    if (e.touches.length === 1) {
-      if (ctrl_id === null){
-        const dx = lastPosition1.x - e.touches[0].clientX;
-        const dy = lastPosition1.y - e.touches[0].clientY;
+  if (e.touches.length === 1) {
+    if (ctrl_id === null){
+      const dx = lastPosition1.x - e.touches[0].clientX;
+      const dy = lastPosition1.y - e.touches[0].clientY;
 
-        const angle2 = Math.atan2(dx,dy)
-        const range = Math.sqrt(dx**2 + dy**2)
+      const angle2 = Math.atan2(dx,dy)
+      const range = Math.sqrt(dx**2 + dy**2)
 
-        cameraAngleY += Math.sin(angle2) * range * 0.005;
-        cameraAngleX += Math.cos(angle2) * range * 0.005;
-        cameraAngleX = Math.max(-pitchLimit, Math.min(pitchLimit, cameraAngleX));
-
-        lastPosition1 = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-      } else {
-        const dx = ctrlX - e.touches[0].clientX;
-        const dy = ctrlY - e.touches[0].clientY;
-
-        const angley = cameraAngleY + Math.atan2(dx,dy)
-        const range = Math.sqrt(dx**2 + dy**2)
-        moveVectorX = Math.sin(angley) * range * 0.01
-        moveVectorZ = Math.cos(angley) * range * 0.01
-
-        const ctrl_angle = Math.atan2(dx,dy)
-        ctrl_ui.style.left = ctrlX - Math.sin(ctrl_angle) * Math.min(40, range) + 'px';
-        ctrl_ui.style.top = ctrlY - Math.cos(ctrl_angle) * Math.min(40, range) + 'px';
-
-      }
-    } else if (e.touches.length >= 2) {
-
-      if (ctrl_id===null){return}
-      // if (e.changedTouches[1].identifier === ctrl_id){alert('ctrl1')}
-
-      const cdx = lastPosition1.x - e.touches[camera_num].clientX;
-      const cdy = lastPosition1.y - e.touches[camera_num].clientY;
-      const angle2 = Math.atan2(cdx,cdy)
-      const crange = Math.sqrt(cdx**2 + cdy**2)
-
-      cameraAngleY += Math.sin(angle2) * crange * 0.005;
-      cameraAngleX += Math.cos(angle2) * crange * 0.005;
+      cameraAngleY += Math.sin(angle2) * range * 0.005;
+      cameraAngleX += Math.cos(angle2) * range * 0.005;
       cameraAngleX = Math.max(-pitchLimit, Math.min(pitchLimit, cameraAngleX));
 
-      lastPosition1 = { x: e.touches[camera_num].clientX, y: e.touches[camera_num].clientY };
-    
-      const dx = ctrlX - e.touches[ctrl_num].clientX;
-      const dy = ctrlY - e.touches[ctrl_num].clientY;
+      lastPosition1 = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    } else {
+      const dx = ctrlX - e.touches[0].clientX;
+      const dy = ctrlY - e.touches[0].clientY;
 
       const angley = cameraAngleY + Math.atan2(dx,dy)
       const range = Math.sqrt(dx**2 + dy**2)
@@ -559,63 +603,45 @@ document.addEventListener('touchmove', (e) => {
       ctrl_ui.style.top = ctrlY - Math.cos(ctrl_angle) * Math.min(40, range) + 'px';
 
     }
-  } else if (AngleMode === 'TURNING'){
+  } else if (e.touches.length >= 2) {
 
+    if (ctrl_id===null){return}
+    // if (e.changedTouches[1].identifier === ctrl_id){alert('ctrl1')}
 
-    const diff_points = [mouse.x- origin[0],mouse.y- origin[1]]
-    const radius = Math.atan2(diff_points[0],diff_points[1])
-    const reach = Math.sqrt(diff_points[0]**2 + diff_points[1]**2)
+    const cdx = lastPosition1.x - e.touches[camera_num].clientX;
+    const cdy = lastPosition1.y - e.touches[camera_num].clientY;
+    const angle2 = Math.atan2(cdx,cdy)
+    const crange = Math.sqrt(cdx**2 + cdy**2)
 
-    const beside_incline = Math.sin(radius) * reach
-    const vertical_incline = Math.cos(radius) * reach
+    cameraAngleY += Math.sin(angle2) * crange * 0.005;
+    cameraAngleX += Math.cos(angle2) * crange * 0.005;
+    cameraAngleX = Math.max(-pitchLimit, Math.min(pitchLimit, cameraAngleX));
 
-    cameraAngleZ = Math.max(Math.min(beside_incline, 30* Math.PI/180), -30* Math.PI/180)
-    cameraAngleX = Math.min(vertical_incline - 15* Math.PI/180 , 0)
+    lastPosition1 = { x: e.touches[camera_num].clientX, y: e.touches[camera_num].clientY };
+  
+    const dx = ctrlX - e.touches[ctrl_num].clientX;
+    const dy = ctrlY - e.touches[ctrl_num].clientY;
 
-    camera.position.x = 0
+    const angley = cameraAngleY + Math.atan2(dx,dy)
+    const range = Math.sqrt(dx**2 + dy**2)
+    moveVectorX = Math.sin(angley) * range * 0.01
+    moveVectorZ = Math.cos(angley) * range * 0.01
 
-    camera.position.z = Math.sin(Math.min(vertical_incline,0.3) * (75*Math.PI/180) + 75*Math.PI/180) * 15 +5
-    camera.position.y = Math.cos(Math.min(vertical_incline,0.3) * (75*Math.PI/180) + 75*Math.PI/180) * 15 +5
-    
-    const pulus = 0.8
-    const route_X = (beside_incline*pulus) + Math.PI
-    const route_Z = (vertical_incline*pulus) + Math.PI //+ 15* Math.PI/180
-
-    const g = 9.81
-    world.gravity = { x:  Math.sin(route_X)*-g, y:  (Math.cos(route_X)*g + Math.cos(route_Z)*g)/2, z: Math.sin(route_Z)*g};
-
-    console.log(vertical_incline)
+    const ctrl_angle = Math.atan2(dx,dy)
+    ctrl_ui.style.left = ctrlX - Math.sin(ctrl_angle) * Math.min(40, range) + 'px';
+    ctrl_ui.style.top = ctrlY - Math.cos(ctrl_angle) * Math.min(40, range) + 'px';
 
   }
 
 }, { passive: false });
 
-const set_y = 1
 
-function getRayHitPoint(){
-
-  const pos = camera.position
-
-  raycaster.setFromCamera(mouse, camera);
-  const dir = raycaster.ray.direction
-
-  const t = Math.abs((pos.y - set_y)/dir.y)
-  
-  // 交点を計算
-  RayHitPoint = [
-    pos.x + dir.x * t,
-    pos.z + dir.z * t
-  ];
-
-}
-
-// 物体移動完了
-document.addEventListener('mouseup', () => {
-  // dragging = false
-});
+// // 物体移動完了
+// document.addEventListener('mouseup', () => {
+//   handleMouseUp();
+// });
 
 document.addEventListener('touchend',(e)=>{
-  dragging = false
   // 視点
   if (ctrl_id === e.changedTouches[0].identifier){
     ctrl_id = null
@@ -636,49 +662,6 @@ document.addEventListener('touchend',(e)=>{
 }
 );
 
-// ========= モード切り替え用 UI ========= //
-
-let AngleMode = 'FREE'
-
-export function UIevent (uiID, toggle){
-  if ( uiID === 'map' ){ if ( toggle === 'active' ){
-    AngleMode = 'FREE'
-    console.log( 'map _active' )
-  } else {
-  console.log( 'map _inactive' )
-  }} else if ( uiID === 'games' ){ if ( toggle === 'active' ){
-  console.log( 'games _active' )
-  } else {
-  console.log( 'games _inactive' )
-  }} else if ( uiID === 'labyrinth_ball' ){ if ( toggle === 'active' ){
-    AngleMode = 'TURNING'
-    // camera.rotation.z = 30*Math.PI/180
-    
-    cameraAngleY = 0
-    cameraAngleZ = 0
-    // console.log(vertical_incline, Math.cos(radius),reach_diff)
-    cameraAngleX = -15* Math.PI/180
-
-    camera.position.x = 0
-    camera.position.z = Math.sin(75*Math.PI/180) * 15 +5
-    camera.position.y = Math.cos(75*Math.PI/180) * 15 +5
-    console.log(AngleMode)
-
-    console.log( 'labyrinth_ball _active' )
-  } else {
-    cameraAngleY = 0
-    cameraAngleZ = 0
-    // console.log(vertical_incline, Math.cos(radius),reach_diff)
-    cameraAngleX = 0
-
-    camera.position.x = 0
-    camera.position.z = 0
-    camera.position.y = 0
-
-  console.log( 'labyrinth_ball _inactive' )
-  }}
-}
-
 // アナロク操作（デバッグ用）
 // カメラの位置（視点の位置）
 
@@ -696,8 +679,6 @@ document.addEventListener('keyup', (e) => keys[e.key.toLowerCase()] = false);
 // ========== カメラ制御変数 ========== //
 let cameraAngleY = 180 * Math.PI / 180;  // 水平回転
 let cameraAngleX = Math.PI / 180;  // 垂直回転
-let cameraAngleZ = 0
-
 let moveVectorX = 0
 let moveVectorZ = 0
 
@@ -740,25 +721,7 @@ document.addEventListener('keydown', (e) => {
 });
 
 function animate() {
-
   requestAnimationFrame(animate);
-
-  // if (AngleMode === 'TURNING'){
-  //   getRayHitPoint();
-  // }
-
-  // 球体
-  // controls.update();
-
-  // サブステップで安定
-  for (let i = 0; i < 2; i++) world.step();
-
-  const t = ballBody.translation();
-  const r = ballBody.rotation();
-  ballMesh.position.set(t.x, t.y, t.z);
-  ballMesh.quaternion.set(r.x, r.y, r.z, r.w);
-
-
 
   // console.log(b6dm.rotation)
 
@@ -834,10 +797,6 @@ function animate() {
   );
 
   camera.lookAt(new THREE.Vector3().addVectors(camera.position, direction));
-  if (AngleMode === 'TURNING'){
-    camera.rotation.z = cameraAngleZ
-    camera.rotation.x = cameraAngleX
-  }
 
   // メインカメラ：画面全体
   renderer.setViewport(0, 0, window.innerWidth, window.innerHeight);
