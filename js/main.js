@@ -67,7 +67,16 @@ import * as THREE from 'three';
 const scene = new THREE.Scene();
 
 const canvas = document.getElementById('three-canvas');
-const renderer = new THREE.WebGLRenderer({ canvas });
+// ← antialias ON を追加
+const renderer = new THREE.WebGLRenderer({
+  canvas,
+  antialias: true
+});
+
+// ← 高解像度ディスプレイに対応
+renderer.setPixelRatio(1.5);
+
+// ← CSSと合わせるならこれでOK
 renderer.setSize(window.innerWidth, window.innerHeight);
 
 import { WorldCreat } from './world_creat.js';
@@ -154,7 +163,11 @@ toggleBtn.addEventListener("click", () => {
     scene.background = envMapNight;
     scene.environment = envMapNight;
     
-    dirLight.visible = false;
+    dirLight.color.set(0xffc27a);
+    dirLight.intensity = 2.0;
+    dirLight.position.set(-50, 20, -100);
+
+    // dirLight.visible = false;
     // ambient.visible = false;
 
     toggleBtn.textContent = "☀️ 昼にする";
@@ -164,7 +177,10 @@ toggleBtn.addEventListener("click", () => {
     scene.background = envMap;
     scene.environment = envMap;
 
-    dirLight.visible = true;
+    dirLight.color.set(0xffeeee);    
+    dirLight.intensity = 1.0;
+    dirLight.position.set(200, 200, 200); // 例: 斜め上（単位はシーンの単位に依存）
+    
     // ambient.visible = true;
 
     toggleBtn.textContent = "🌙 夜にする";
@@ -179,7 +195,10 @@ toggleBtn.addEventListener("touchstart", () => {
     scene.background = envMapNight;
     scene.environment = envMapNight;
 
-    dirLight.visible = false;
+    dirLight.color.set(0xffc27a);
+    dirLight.intensity = 2.0;
+    dirLight.position.set(-50, 20, -100);
+
     // ambient.visible = false;
 
     toggleBtn.textContent = "☀️ 昼にする";
@@ -189,7 +208,11 @@ toggleBtn.addEventListener("touchstart", () => {
     scene.background = envMap;
     scene.environment = envMap;
 
-    dirLight.visible = true;
+    dirLight.color.set(0xffeeee);    
+    dirLight.intensity = 1.0;
+    dirLight.position.set(200, 200, 200); // 例: 斜め上（単位はシーンの単位に依存）
+    
+    // dirLight.visible = true;
     // ambient.visible = true;
 
     toggleBtn.textContent = "🌙 夜にする";
@@ -497,15 +520,23 @@ const ctrl_ui = document.getElementById("controller")
 let lastPosition1 = { x: 0, y: 0 };
 
 const ctrlX = 160
-const ctrlY = canvas.height - 60 - 80
+// canvas.clientWidth / canvas.clientHeight
+const ctrlY = canvas.clientHeight - 60 - 80
+console.log(canvas.clientHeight)
+
+ctrl_ui.style.left = ctrlX + 'px';
+ctrl_ui.style.top = ctrlY + 'px';
+
 let camera_num = 1
 let ctrl_num = 0
 
 let ctrl_id = null
 
-function search_ctrl_num(e){
+async function search_ctrl_num(e){
   const touches = e.touches
+  console.log(touches)
   for(let i = 0; i < touches.length; i++){
+    console.log(ctrlX-touches[i].clientX,ctrlY-touches[i].clientY)
     if (40 > Math.sqrt((ctrlX-touches[i].clientX)**2 + (ctrlY-touches[i].clientY)**2)){
       if (ctrl_id === null){
         ctrl_id = e.changedTouches[0].identifier
@@ -536,16 +567,17 @@ function handleMouseMove(x, y) {
 // ジョイコン or 視点 判定 : 物体移動開始
 // window.addEventListener('mousedown', handleMouseDown);
 
-window.addEventListener('touchstart', (e) => {
+window.addEventListener('touchstart', async (e) => {
 
   // UI監視
   const touch = e.touches[0];
   handleMouseMove(touch.clientX, touch.clientY);
   
   // 視点
-  search_ctrl_num(e)
+  await search_ctrl_num(e)
+  console.log('run')
   if (e.changedTouches[0].identifier != ctrl_id && e.touches.length <= 2){
-  lastPosition1 = { x: e.touches[e.touches.length-1].clientX, y: e.touches[e.touches.length-1].clientY }
+    lastPosition1 = { x: e.touches[e.touches.length-1].clientX, y: e.touches[e.touches.length-1].clientY }
   }
 
   // --- 編集モード
