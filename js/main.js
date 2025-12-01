@@ -677,13 +677,13 @@ document.addEventListener('keydown', (e) => keys[e.key.toLowerCase()] = true);
 document.addEventListener('keyup', (e) => keys[e.key.toLowerCase()] = false);
 
 // ========== カメラ制御変数 ========== //
-let cameraAngleY = 180 * Math.PI / 180;  // 水平回転
+let cameraAngleY = 0 * Math.PI / 180;  // 水平回転
 let cameraAngleX = Math.PI / 180;  // 垂直回転
 let moveVectorX = 0
 let moveVectorZ = 0
 
-camera.position.y += 1
-camera.position.z = 10//-13
+camera.position.y += 2.5
+camera.position.z = -8//-13
 // ========== ボタン UI ========== //
 // 状態フラグ
 let speedUp = false;
