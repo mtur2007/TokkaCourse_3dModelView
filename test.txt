@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ball Throw (three.js + Rapier)</title>
+    <style>
+      html, body { height: 100%; margin: 0; overflow: hidden; background: #0b1020; }
+      #ui { position: fixed; left: 12px; top: 12px; color: #e7e9ee; font: 14px/1.5 system-ui, -apple-system, Segoe UI, Roboto, sans-serif; background: rgba(0,0,0,.35); padding: 10px 12px; border-radius: 10px; backdrop-filter: blur(6px); }
+      #ui kbd { background:#111; border:1px solid #333; border-bottom-color:#222; border-radius:6px; padding:2px 6px; font-size: 12px; }
+      a { color: #9ad; }
+    </style>
+  </head>
+  <body>
+    <div id="ui">
+      <div><strong>Ball Throw Demo</strong>（three.js + Rapier）</div>
+      <div>操作：</div>
+      <ul style="margin:6px 0 0 18px; padding:0;">
+        <li><kbd>Space</kbd>：手前位置から前方にボールを投げる</li>
+        <li>クリック：視点方向に強く投げる（レイ方向）</li>
+        <li>ドラッグ：カメラ回転（OrbitControls）</li>
+        <li>ホイール：ズーム</li>
+        <li><kbd>R</kbd>：ボール位置をリセット</li>
+      </ul>
+    </div>
+    <script type="module">
+      // ====== Imports ======
+      import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js';
+      
+      import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/loaders/GLTFLoader.js';
+      
+      import RAPIER from 'https://cdn.skypack.dev/@dimforge/rapier3d-compat';
+
+      // ====== Three.js 基本セットアップ ======
+      const renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setPixelRatio(devicePixelRatio);
+      renderer.setSize(innerWidth, innerHeight);
+      renderer.shadowMap.enabled = true;
+      document.body.appendChild(renderer.domElement);
+
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x0b1020);
+
+      const camera = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 0.1, 500);
+      camera.position.set(8, 6, 12);
+
+      const controls = new OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+
+      // ライト
+      scene.add(new THREE.AmbientLight(0xffffff, 0.35));
+      const dir = new THREE.DirectionalLight(0xffffff, 1.0);
+      dir.position.set(6, 12, 8);
+      dir.castShadow = true;
+      dir.shadow.mapSize.set(2048, 2048);
+      scene.add(dir);
+
+      // マテリアル共通
+      const groundMat = new THREE.MeshStandardMaterial({ color: 0x2b2f3a, roughness: 0.9, metalness: 0.0 });
+      const ballMat   = new THREE.MeshStandardMaterial({ color: 0xffcc55, roughness: 0.4, metalness: 0.1 });
+
+      // 地面（見た目）
+      const groundMesh = new THREE.Mesh(
+        new THREE.BoxGeometry(100, 2, 100),
+        groundMat,
+      );
+      groundMesh.receiveShadow = true;
+      groundMesh.position.y = -1;
+      scene.add(groundMesh);
+
+      // 軽い目印のグリッド
+      const grid = new THREE.GridHelper(100, 100, 0x5577aa, 0x224466);
+      grid.position.y = -0.99;
+      scene.add(grid);
+
+      // ボール（見た目）
+      const radius = 0.5;
+      const ballMesh = new THREE.Mesh(
+        new THREE.SphereGeometry(radius, 32, 16),
+        ballMat
+      );
+      ballMesh.castShadow = true;
+      scene.add(ballMesh);
+
+      // ====== Rapier 物理セットアップ ======
+      await RAPIER.init();
+      const world = new RAPIER.World({ x: 0, y: -9.81, z: 0 });
+
+      // 反発と摩擦のデフォルトを少し設定（床材っぽく）
+      world.integrationParameters.dt = 1/60; // 固定タイムステップ
+
+      // 地面（固定ボディ）
+      const groundBody = world.createRigidBody(
+        RAPIER.RigidBodyDesc.fixed().setTranslation(0, -1, 0)
+      );
+      // Box の半径指定（幅/2, 高さ/2, 奥行き/2）
+      const groundCol = RAPIER.ColliderDesc.cuboid(50, 1, 50)
+        .setFriction(0.9)
+        .setRestitution(0.1);
+      world.createCollider(groundCol, groundBody);
+
+      // ボール（動的ボディ）
+      const ballBody = world.createRigidBody(
+        RAPIER.RigidBodyDesc.dynamic().setTranslation(0, 3, 0)
+      );
+      ballBody.enableCcd(true); // すり抜け防止
+      const ballCol = RAPIER.ColliderDesc.ball(radius)
+        .setFriction(0.6)
+        .setRestitution(0.55); // 跳ね返り感
+      world.createCollider(ballCol, ballBody);
+
+      // ====== 入力：投げる／リセット ======
+      function throwForward(power = 8, up = 4) {
+        // カメラ前方へ投げる
+        const dir = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion).normalize();
+        const origin = camera.position.clone().add(dir.clone().multiplyScalar(2.0));
+
+        ballBody.setTranslation({ x: origin.x, y: origin.y, z: origin.z }, true);
+        ballBody.setLinvel({ x: dir.x * power, y: up, z: dir.z * power }, true);
+        ballBody.setAngvel({ x: 3, y: 0.5, z: 0 }, true);
+      }
+
+      function resetBall() {
+        ballBody.setTranslation({ x: 0, y: 3, z: 0 }, true);
+        ballBody.setLinvel({ x: 0, y: 0, z: 0 }, true);
+        ballBody.setAngvel({ x: 0, y: 0, z: 0 }, true);
+      }
+
+      addEventListener('keydown', (e) => {
+        if (e.code === 'Space') throwForward(8, 4); // 標準投げ
+        if (e.code === 'KeyR') resetBall();
+      });
+
+      addEventListener('click', () => {
+        // クリック時は少し強めに
+        throwForward(12, 5);
+      });
+
+      // ====== ループ ======
+      const tmp = new THREE.Vector3();
+      function animate() {
+        requestAnimationFrame(animate);
+        controls.update();
+
+        // サブステップで安定
+        for (let i = 0; i < 2; i++) world.step();
+
+        const t = ballBody.translation();
+        const r = ballBody.rotation();
+        ballMesh.position.set(t.x, t.y, t.z);
+        ballMesh.quaternion.set(r.x, r.y, r.z, r.w);
+
+        renderer.render(scene, camera);
+      }
+      animate();
+
+      // リサイズ
+      addEventListener('resize', () => {
+        camera.aspect = innerWidth / innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(innerWidth, innerHeight);
+      });
+
+      // 初期表示：軽く投げておく
+      setTimeout(() => throwForward(6, 3.5), 300);
+    </script>
+  </body>
+</html>
