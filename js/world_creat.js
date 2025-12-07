@@ -1,3 +1,5 @@
+// world_creat.js : 3D空間に表示するモデル(glbファイル)を読み込み 、3D空間に表示するのファイル
+
 import * as THREE from 'three';
 
 // 必ず three と同バージョンの examples モジュールを使う（あなたは three@0.169 を使っているので合わせる）
@@ -13,6 +15,7 @@ dirLight.name = 'dirLight'
 
 // ライトの位置（光が来る方）
 dirLight.position.set(200, 200, 200); // 例: 斜め上（単位はシーンの単位に依存）
+// dirLight.position.set( 1, 3, 1); // 例: 斜め上（単位はシーンの単位に依存）
 
 // ターゲット（ライトが向く場所）
 dirLight.target.position.set(0, 0, 0); // 原点を向かせる例
@@ -23,9 +26,9 @@ scene.add(dirLight);
 
 // // --- 既存の DirectionalLight(dirLight) にシャドウ設定を追加 ---
 dirLight.castShadow = true;           // ライトがシャドウを投げる
-// dirLight.shadow.mapSize.width = 4000; // 解像度（要調整：2048/1024/4096）
-// dirLight.shadow.mapSize.height = 4000;
-dirLight.shadow.mapSize.set(4000, 4000); // 必要に応じて解像度を下げる
+
+dirLight.shadow.mapSize.set(2000, 2000); // 必要に応じて解像度を下げる
+
 dirLight.shadow.radius = 4;           // ソフトネス（three r0.150+ で有効）
 dirLight.shadow.bias = -0.0005;       // 影のアーティファクト（自動調整必要）
 dirLight.shadow.normalBias = 0.5;    // 法線オフセット（改善される場合あり）
@@ -102,13 +105,19 @@ async function loadModelToScene(modelUrl, options = {}, adjustment=true, sinkans
     castShadow = false,
     receiveShadow = false,
     onProgress = (xhr) => (xhr.total),
+    name = false
   } = options;
 
   return new Promise((resolve, reject) => {
     gltfLoader.load(
       modelUrl,
       (gltf) => {
+
         const root = gltf.scene || gltf.scenes[0];
+        if (name != false){
+          root.name = name
+        }
+
         if (!root) return reject(new Error('glTF にシーンがありません'));
 
         // 1) マテリアル側に環境マップをセット（PBRの反射を有効化）
@@ -247,7 +256,7 @@ async function loadModelToScene(modelUrl, options = {}, adjustment=true, sinkans
 
 // // --------------- 実行例：model.glb を読み込む ----------------
 // ここのファイル名をあなたの .glb の名前に変えてください
-loadModelToScene('tokka_class.glb', { autoCenter: true, autoScaleMax: 10000, scaleIfLarge: 0.001 })
+await loadModelToScene('tokka_class.glb', { autoCenter: true, autoScaleMax: 10000, scaleIfLarge: 0.001, name:'SchoolModel' })
   .then((root) => {
     console.log('GLB loaded and added to scene:', root);
   })

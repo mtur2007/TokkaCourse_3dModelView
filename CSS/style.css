@@ -1,0 +1,469 @@
+@charset "UTF-8";
+/* CSS Document */
+
+/* ---------
+初期設定
+-----------*/
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "游ゴシック体", "YuGothic", "游ゴシック", "Yu Gothic", "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", "Meiryo", sans-serif;
+	color: #333;
+}
+
+.control-button {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  font-size: 24px;
+  border: none;
+  border-radius: 30px;
+  background-color: rgba(255, 255, 255, 0.2); /* 透過っぽい */
+  color: white;
+  z-index: 20;
+  backdrop-filter: blur(4px); /* iOSっぽいガラス感 */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  transition: all 0.1s ease-in-out;
+  
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+
+.control-square-button {
+position: absolute;
+width: 400px;
+height: 40px;
+font-size: 24px;
+border: none;
+border-radius: 4px; /* ← 四角っぽい角丸（完全に四角なら 0 に） */
+background-color: rgba(255, 255, 255, 0.2);
+color: white;
+z-index: 20;
+backdrop-filter: blur(4px);
+box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+transition: all 0.1s ease-in-out;
+
+user-select: none;
+-webkit-user-select: none;
+-moz-user-select: none;
+-ms-user-select: none;
+-webkit-tap-highlight-color: transparent;
+-webkit-touch-callout: none;
+}
+.log-control-square-button {
+position: absolute;
+width: 800px;
+height: 400px;
+font-size: 24px;
+border: none;
+border-radius: 4px; /* ← 四角っぽい角丸（完全に四角なら 0 に） */
+background-color: rgba(255, 255, 255, 0.2);
+color: white;
+z-index: 20;
+backdrop-filter: blur(4px);
+box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+transition: all 0.1s ease-in-out;
+
+user-select: none;
+-webkit-user-select: none;
+-moz-user-select: none;
+-ms-user-select: none;
+-webkit-tap-highlight-color: transparent;
+-webkit-touch-callout: none;
+}
+
+/* ホバー（マウスを乗せたとき）で暗くする */
+.control-button:hover {
+filter: brightness(85%);
+cursor: pointer;
+}
+
+/* クリック中（押してる最中）でさらに暗くする */
+.control-button:active {
+filter: brightness(70%);
+}
+
+/* アイコンの重ねラッパー */
+.icon-wrapper {
+position: absolute;
+display: flex;              /* 中央寄せ用 */
+align-items: center;        /* 縦中央 */
+justify-content: center;    /* 横中央 */
+width: 2em;                 /* ボタンに合わせて大きめに */
+height: 2em;
+}
+
+/* 薄い背景記号 */
+.background-icon {
+position: absolute;
+color: rgba(0, 0, 0, 0.5);
+font-size: 1.5em;
+}
+/* 濃い前面記号 */
+.foreground-icon {
+position: absolute;
+color: black;
+font-size: 1.3em;
+}
+
+.credits-footer {
+position: absolute;
+left: 0;
+right: 0;
+bottom: 0;
+background: rgba(255,255,255,0.9);
+padding: 6px 12px;
+font-size: 12px;
+text-align: center;
+z-index: 20;
+box-shadow: 0 -1px 6px rgba(0,0,0,0.12);
+}
+.credits-footer a { color: #0645ad; text-decoration: underline; }
+
+/* コントローラーのスタイル */
+.circle-ctrl-area {
+position: absolute;
+border-radius: 50%;
+background: rgba(255,255,255,0.95);
+background: rgba(0,0,0,0.5);
+border: 2px solid #333;
+box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+transform: translate(-50%, -50%); /* left/top を中心にする */
+display: flex;
+align-items: center;
+justify-content: center;
+user-select: none;
+touch-action: none;
+cursor: grab;
+pointer-events: auto;
+}
+/* .circle-ctrl-area { cursor: grabbing; } */
+
+.circle-ctrl {
+position: absolute;
+width: 10px;
+height: 10px;
+border-radius: 50%;
+background: rgba(0,0,0,0.5);
+border: 2px solid #fff;
+box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+transform: translate(-50%, -50%); /* left/top を中心にする */
+display: flex;
+align-items: center;
+justify-content: center;
+user-select: none;
+touch-action: none;
+cursor: grab;
+pointer-events: auto;
+}
+/* .circle-ctrl:active { cursor: grabbing; } */
+#UiGroup {
+position: relative; /* ここを基準にする */
+width: 10%;
+height: 590px;
+border: 1px solid rgba(221, 221, 221, 0.2); /* 透明度 0.5 (=50%) */
+}
+#UiGroup button {
+position: absolute; /* top が効くようにする */
+left: 0;
+width: 72px;
+height: 28px;
+}
+
+/* 最初はバナー的なエリア（高さは好みで） */
+#three-section.banner {
+height: 40vh;        /* 画面の 40% 高さくらいのバナー */
+width: 100%;
+background: #eee;
+position: relative;
+margin-top: 10px;
+margin-bottom: 20px;
+padding: 0px;
+}
+
+/* 拡大時は画面いっぱいに固定表示 */
+#three-section.fullscreen {
+position: fixed;
+inset: 0;            /* top:0; right:0; bottom:0; left:0 と同じ */
+width: 100vw;
+height: 100vh;
+background: #000;
+z-index: 90;
+}
+
+/* canvas をセクションいっぱいに広げる */
+#three-canvas {
+width: 100%;
+height: 100%;
+touch-action: 'auto';
+display: block;
+}
+
+/* 拡大/閉じるボタン（右上） */
+.expand-btn {
+position: absolute;
+top: 10px;
+right: 10px;
+z-index: 100;
+padding: 6px 10px;
+font-size: 14px;
+border-radius: 6px;
+border: none;
+background: rgba(255,255,255,0.8);
+}
+
+/* 拡大／閉じるボタン（右上固定） */
+.left-btn {
+position: absolute;
+top: 10px;
+left: 10px;
+z-index: 80;
+
+padding: 6px 12px;
+font-size: 14px;
+
+border: none;
+border-radius: 6px;
+
+background: rgba(255, 255, 255, 0.85);
+color: #000;
+
+box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+
+cursor: pointer;
+backdrop-filter: blur(6px); /* iOS風ガラス効果 */
+transition: all 0.2s ease;
+}
+
+#phone {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 20;
+
+  padding: 6px 12px;
+  font-size: 14px;
+
+  border: none;
+  border-radius: 6px;
+
+  background: rgba(255, 255, 255, 0.85);
+  color: #000;
+
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+
+  cursor: pointer;
+  backdrop-filter: blur(6px); /* iOS風ガラス効果 */
+  transition: all 0.2s ease;
+}
+
+#pc {
+  position: absolute;
+  top: 10px;
+  left: 110px;
+  z-index: 20;
+
+  padding: 6px 12px;
+  font-size: 14px;
+
+  border: none;
+  border-radius: 6px;
+
+  background: rgba(255, 255, 255, 0.85);
+  color: #000;
+
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+
+  cursor: pointer;
+  backdrop-filter: blur(6px); /* iOS風ガラス効果 */
+  transition: all 0.2s ease;
+}
+
+.section {
+  margin-top: 20px;
+}
+
+#imageText{
+  margin-top: 20px;
+}
+
+.section-title {
+  font-size: 20px;
+}
+
+#about-text{
+  margin-top: 5px;
+  margin-left: 20px;
+  font-size: 15px;
+}
+
+.shop-section{
+  margin-left: 20px;
+  margin-top: 10px;
+  margin-bottom: 5px;
+  font-size: 18px;
+}
+.shop{
+  margin-left: 40px;
+}
+/* 画面の２分割 */
+/* 
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+} */
+
+/* 上半分（本文） */
+.shop-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px;
+  background: #fff;
+}
+
+/* 店の項目 */
+
+.item {
+  padding: 10px 6px;
+  border-bottom: 1px solid #ccc;
+  cursor: pointer;
+}
+
+.item-label{
+  color: #0645ad;
+  border-bottom: 1px solid #0645ad;
+  padding-bottom: 1px;
+}
+
+
+/* 下半分に固定されるエリア */
+#desc-panel {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 35vh;        /* 画面の高さの半分 */
+  color: #ffffff;
+  /* color: #0645ad; */
+  /* background: #5c7db1; */
+  background: rgba(0, 0, 0, 0.825);
+  border-top: 2px solid #f00;
+  box-sizing: border-box;
+  padding: 16px;
+  
+  overflow: hidden;    /* 中身がはみ出るなら auto にしてスクロールも可 */
+}
+
+
+/*  */
+
+.schedule-section{
+  margin-left: 20px;
+  margin-top: 10px;
+  margin-bottom: 5px;
+  font-size: 18px;
+}
+
+.time{
+  margin-left: 40px;
+  font-size: 15px;
+}
+
+.title{
+  margin-top: 25px;
+  font-size: clamp(25px, 5vw, 36px);
+  text-align: center;
+}
+
+.sub-title{
+  margin-top: 10px;
+  font-size: clamp(17px, 3vw, 25px);
+  text-align: center;
+}
+
+.banner {
+  background: linear-gradient(90deg, #ff8a8a, #ff5555);
+  color: white;
+  padding: 15px 0;
+  text-align: center;
+  font-size: clamp(18px, 3vw, 28px);
+  font-weight: bold;
+}
+
+.sticky-banner {
+  position: sticky;
+  top: 0;
+  margin-top: 12px;
+  background: #0645ad;
+  padding: 15px;
+  color: white;
+  z-index: 1000;
+}
+
+.nav {
+  display: flex;         /* 横並びにする */
+  justify-content: space-evenly;
+  list-style: none;      /* 左の点を消す */
+  padding: 0;
+  margin: 0;
+}
+
+.nav li a {
+  text-decoration: none; /* 下線を消す（必要なら） */
+  color: #eee;           /* 好きな色に */
+  font-size: clamp(9px, 2vw, 18px);
+}
+
+.nav a {
+  text-decoration: none;
+  color: #333;
+  padding: 4px 8px;
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.nav a.active {
+  color: #d9534f;              /* 目立つ赤とか */
+  border-bottom-color: #d9534f; /* 下線を出す */
+}
+
+[id] {
+  scroll-margin-top:  55px;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+section {
+  transition: opacity 0.2s, filter 0.2s;
+}
+
+section.active {
+  opacity: 1;
+  filter: none;
+}
+
+section.inactive {
+  opacity: 0.2;
+  filter: blur(1px);
+}
+
+section.sub-inactive {
+  opacity: 0.6;
+  filter: blur(0.6px);
+}
+
+.map{
+  font-size: clamp(10px, 100vw, 360px);
+}
