@@ -7,6 +7,7 @@
   <title>第一学院高等学校お茶の水校_文化祭 /「御茶ノ水フェス 2026 </title>
 	<link rel="stylesheet" href="CSS/destyle.css">
 	<link rel="stylesheet" href="CSS/style.css">
+  <link rel="stylesheet" href="CSS/effects.css">
   <script type="importmap">
     {
       "imports": {
@@ -38,10 +39,10 @@
 
   <div id="banner" class="sticky-banner">
     <ul class="nav">
-      <li><a href="#news">お知らせ</a></li>
+      <li><a href="#news">news</a></li>
       <li><a href="#about">文化祭について</a></li>
       <li><a href="#shop">出し物紹介</a></li>
-      <li><a href="#schedule">タイムスケジュール</a></li>
+      <li><a href="#schedule">スケジュール</a></li>
       <li><a href="#access">アクセス</a></li>
   </ul>
   </div>
@@ -84,76 +85,114 @@
   </section>
 
   <section id="about" class="section">
-    <h2 class="section-title">【文化祭について】</h2>
-    <div id="about-text">
-      ------------ <br>
-      ------------ <br>
-      ------------ <br>
-      ------------ <br>
-      ------------ <br>
-      ------------ <br>
-      ------------ <br>
-  </div>
+    <div class="inner">
+      <h2 class="section-title">【文化祭について】</h2>
+      <div id="about-text">
+        ------------ <br>
+        ------------ <br>
+        ------------ <br>
+        ------------ <br>
+        ------------ <br>
+        ------------ <br>
+        ------------ <br>
+      </div> 
+    </div>
     
   </section>
 
-  <!-- メッセージ -->
+  <!-- 出し物 -->
   <section id="shop" class="section">
 
-    <!-- 下半分に固定して表示したい“物体” -->
     <div id="desc-panel">
-      <!-- 例：概要エリア or Three.jsのcanvasなど -->
       <div id="descPanel">
         ※説明欄
       </div>
     </div>
 
     <h2 class="section-title">【出し物紹介】</h2>
+    <div class="underline"> </div>
 
-    <p class="shop-section">< 🎨ART > 1年生
+    <div class="inner">
 
-      <div class="shop">
-        <div class="item" data-desc="友情と信頼を描いた現代アレンジ演劇。">
-          <span class="item-label">1-1：演劇「走れメロス 現代版」</span>
-        </div>
-      
-        <div class="item" data-desc="青春をテーマにした写真展示企画です。">
-          <span class="item-label">1-2：写真展「青春の記録」</span>
-        </div>
-      
-        <div class="item" data-desc="世界の文化や名物を紹介する展示。">
-          <span class="item-label">1-3：展示「世界の国を旅しよう！」</span>
-        </div>
-      </div>
+      <p class="shop-section">< 🎨ART > 1年生
+        <div class="shop">
+          <div class="item" data-desc="友情と信頼を描いた現代アレンジ演劇。">
+            <span class="item-label">1-1 <span id="melos">演劇「走れメロス 現代版」</span></span>
+          </div>
 
-    </p>
-      
-    <p class="shop-section">< 🎪ATTRACTION > 2年生
-      <p class="shop">
-        2-1：お化け屋敷「ホラーハウス・オチャノミズ」<br>
-        2-2：縁日（射的・輪投げ・スーパーボール）<br>
-        2-3：脱出ゲーム「お茶の水迷宮」
+          <div class="item" data-desc="青春をテーマにした写真展示企画です。">
+            <span class="item-label">1-2 <span id="photo">写真展「青春の記録」</span></span>
+          </div>
+
+          <div class="item" data-desc="世界の文化や名物を紹介する展示。">
+            <span class="item-label">1-3 <span id="sekai">展示「世界の国を旅しよう！」</span></span>
+          </div>
+        </div>
       </p>
-    </p>
 
-    <p class="shop-section">< 🍳FOOD > 3年生
-      <p class="shop">
-        3-1：カフェ「3-1 Cafe Yoda」<br>
-        3-2：模擬店「たこ焼き＆焼きそば屋台」<br>
-        3-3：模擬店「オムライス＆ホットドッグ」
+      <p class="shop-section">< 🎪ATTRACTION > 2年生
+        <div class="shop">
+          <div class="item" data-desc="暗闇と恐怖が迫るスリリングな体験型施設。">
+            <span class="item-label">2-1 <span id="horror" class="fx-title fx-glow fx-outline fx-box fx-shake horror" >お化け屋敷</span></span>
+          </div>
+
+          <div class="item" data-desc="子どもから大人まで楽しめる昔ながらの縁日コーナー。">
+            <span class="item-label">2-2 <span id="ennichi">縁日（射的・輪投げ）</span></span>
+          </div>
+
+          <div class="item" data-desc="知力とチームワークで挑む参加型パズルアトラクション。">
+            <span class="item-label">2-3 <span id="escape">脱出ゲーム「お茶の水迷宮」</span></span>
+          </div>
+        </div>
       </p>
-    </p>
 
-    <p class="shop-section">< CULB >  部活動 
-      <p class="shop">吹奏楽部：ミニコンサート（体育館）<br>
-      軽音部：バンドライブ（ピロティ特設ステージ）<br>
-      茶道部：お茶席・お点前体験（茶道室）<br>
-      美術部：作品展示（美術室）<br>
-      ダンス部：ダンスショー（ピロティ特設ステージ）<br>
-      パソコン部：このサイトと3Dゲーム</p>
-    </p>
+      <p class="shop-section">< 🍳FOOD > 3年生
+        <div class="shop">
+          <div class="item" data-desc="ほっと一息つける落ち着いた雰囲気の憩いスペース。">
+            <span class="item-label">3-1 <span id="cafe">カフェ「3-1 Cafe Yoda」</span></span>
+          </div>
 
+          <div class="item" data-desc="お祭り気分を味わえる定番メニューが勢揃い！">
+            <span class="item-label">3-2 <span id="takoyaki">模擬店「たこ焼き&焼きそば屋台」</span></span>
+          </div>
+
+          <div class="item" data-desc="こだわりソースで仕上げる人気の軽食ブース。">
+            <span class="item-label">3-3 <span id="omurice">模擬店「オムライス&ホットドッグ」</span></span>
+          </div>
+        </div>
+      </p>
+
+      <p class="shop-section">< CULB >  部活
+        <div class="shop">
+          <div class="item" data-desc="迫力と感動を届ける吹奏楽の生演奏ステージ。（体育館）">
+            <span class="item-label"><span id="concert">吹奏楽部：ミニコンサート</span></span>
+          </div>
+
+          <div class="item" data-desc="個性と熱気あふれるバンドパフォーマンス。（ピロティ特設ステージ）">
+            <span class="item-label"><span id="band">軽音部：バンドライブ</span></span>
+          </div>
+
+          <div class="item" data-desc="日本文化の魅力を味わえる体験型茶席。（茶道室）">
+            <span class="item-label"><span id="chado">茶道部：お茶席・お点前体験</span></span>
+          </div>
+
+          <div class="item" data-desc="部員たちの力作が並ぶアートギャラリー。（美術室）">
+            <span class="item-label"><span id="art">美術部：作品展示</span></span>
+          </div>
+
+          <div class="item" data-desc="息の合ったダンスで会場を盛り上げるショー。（ピロティ特設ステージ）">
+            <span class="item-label"><span id="dance">ダンス部：ダンスショー</span></span>
+          </div>
+
+          <div class="item" data-desc="オリジナル3DゲームとこのHPを制作技術で展示。">
+            <span class="item-label"><span id="computer">パソコン部：このサイトと3Dゲーム</span></span>
+          </div>
+        </div>
+      </p>
+
+    </div>
   </section>
+
   <!-- プロフィール -->
   <section id="schedule" class="section">
     <h2 class="section-title">【タイムスケジュール】</h2>

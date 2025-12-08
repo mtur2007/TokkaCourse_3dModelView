@@ -1,396 +1,87 @@
 @charset "UTF-8";
-/* CSS Document */
+/* =========================================
+   第一学院高等学校お茶の水校 文化祭サイト CSS
+   -----------------------------------------
+   01. 初期設定・共通スタイル
+   02. セクション共通レイアウト
+   03. ヘッダー・タイトル・ナビゲーション
+   04. スクロール挙動 & セクションの状態
+   05. three.js セクション（レイアウト）
+   06. three.js UI／コントローラー
+   07. 「文化祭について」セクション
+   08. 出し物紹介セクション
+   09. タイムスケジュールセクション
+   10. アクセスセクション
+   ========================================= */
 
-/* ---------
-初期設定
------------*/
+/* -----------------------------------------
+   01. 初期設定・共通スタイル
+   ----------------------------------------- */
 
-*{
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
 body {
-  font-family: "游ゴシック体", "YuGothic", "游ゴシック", "Yu Gothic", "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", "Meiryo", sans-serif;
-	color: #333;
+  font-family: "游ゴシック体", "YuGothic", "游ゴシック", "Yu Gothic",
+    "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro",
+    "メイリオ", "Meiryo", sans-serif;
+  color: #333;
 }
 
-.control-button {
-  position: absolute;
-  width: 60px;
-  height: 60px;
-  font-size: 24px;
-  border: none;
-  border-radius: 30px;
-  background-color: rgba(255, 255, 255, 0.2); /* 透過っぽい */
-  color: white;
-  z-index: 20;
-  backdrop-filter: blur(4px); /* iOSっぽいガラス感 */
-  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-  transition: all 0.1s ease-in-out;
-  
-  user-select: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  -webkit-tap-highlight-color: transparent;
-  -webkit-touch-callout: none;
-}
-
-.control-square-button {
-position: absolute;
-width: 400px;
-height: 40px;
-font-size: 24px;
-border: none;
-border-radius: 4px; /* ← 四角っぽい角丸（完全に四角なら 0 に） */
-background-color: rgba(255, 255, 255, 0.2);
-color: white;
-z-index: 20;
-backdrop-filter: blur(4px);
-box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-transition: all 0.1s ease-in-out;
-
-user-select: none;
--webkit-user-select: none;
--moz-user-select: none;
--ms-user-select: none;
--webkit-tap-highlight-color: transparent;
--webkit-touch-callout: none;
-}
-.log-control-square-button {
-position: absolute;
-width: 800px;
-height: 400px;
-font-size: 24px;
-border: none;
-border-radius: 4px; /* ← 四角っぽい角丸（完全に四角なら 0 に） */
-background-color: rgba(255, 255, 255, 0.2);
-color: white;
-z-index: 20;
-backdrop-filter: blur(4px);
-box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-transition: all 0.1s ease-in-out;
-
-user-select: none;
--webkit-user-select: none;
--moz-user-select: none;
--ms-user-select: none;
--webkit-tap-highlight-color: transparent;
--webkit-touch-callout: none;
-}
-
-/* ホバー（マウスを乗せたとき）で暗くする */
-.control-button:hover {
-filter: brightness(85%);
-cursor: pointer;
-}
-
-/* クリック中（押してる最中）でさらに暗くする */
-.control-button:active {
-filter: brightness(70%);
-}
-
-/* アイコンの重ねラッパー */
-.icon-wrapper {
-position: absolute;
-display: flex;              /* 中央寄せ用 */
-align-items: center;        /* 縦中央 */
-justify-content: center;    /* 横中央 */
-width: 2em;                 /* ボタンに合わせて大きめに */
-height: 2em;
-}
-
-/* 薄い背景記号 */
-.background-icon {
-position: absolute;
-color: rgba(0, 0, 0, 0.5);
-font-size: 1.5em;
-}
-/* 濃い前面記号 */
-.foreground-icon {
-position: absolute;
-color: black;
-font-size: 1.3em;
-}
-
-.credits-footer {
-position: absolute;
-left: 0;
-right: 0;
-bottom: 0;
-background: rgba(255,255,255,0.9);
-padding: 6px 12px;
-font-size: 12px;
-text-align: center;
-z-index: 20;
-box-shadow: 0 -1px 6px rgba(0,0,0,0.12);
-}
-.credits-footer a { color: #0645ad; text-decoration: underline; }
-
-/* コントローラーのスタイル */
-.circle-ctrl-area {
-position: absolute;
-border-radius: 50%;
-background: rgba(255,255,255,0.95);
-background: rgba(0,0,0,0.5);
-border: 2px solid #333;
-box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-transform: translate(-50%, -50%); /* left/top を中心にする */
-display: flex;
-align-items: center;
-justify-content: center;
-user-select: none;
-touch-action: none;
-cursor: grab;
-pointer-events: auto;
-}
-/* .circle-ctrl-area { cursor: grabbing; } */
-
-.circle-ctrl {
-position: absolute;
-width: 10px;
-height: 10px;
-border-radius: 50%;
-background: rgba(0,0,0,0.5);
-border: 2px solid #fff;
-box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-transform: translate(-50%, -50%); /* left/top を中心にする */
-display: flex;
-align-items: center;
-justify-content: center;
-user-select: none;
-touch-action: none;
-cursor: grab;
-pointer-events: auto;
-}
-/* .circle-ctrl:active { cursor: grabbing; } */
-#UiGroup {
-position: relative; /* ここを基準にする */
-width: 10%;
-height: 590px;
-border: 1px solid rgba(221, 221, 221, 0.2); /* 透明度 0.5 (=50%) */
-}
-#UiGroup button {
-position: absolute; /* top が効くようにする */
-left: 0;
-width: 72px;
-height: 28px;
-}
-
-/* 最初はバナー的なエリア（高さは好みで） */
-#three-section.banner {
-height: 40vh;        /* 画面の 40% 高さくらいのバナー */
-width: 100%;
-background: #eee;
-position: relative;
-margin-top: 10px;
-margin-bottom: 20px;
-padding: 0px;
-}
-
-/* 拡大時は画面いっぱいに固定表示 */
-#three-section.fullscreen {
-position: fixed;
-inset: 0;            /* top:0; right:0; bottom:0; left:0 と同じ */
-width: 100vw;
-height: 100vh;
-background: #000;
-z-index: 90;
-}
-
-/* canvas をセクションいっぱいに広げる */
-#three-canvas {
-width: 100%;
-height: 100%;
-touch-action: 'auto';
-display: block;
-}
-
-/* 拡大/閉じるボタン（右上） */
-.expand-btn {
-position: absolute;
-top: 10px;
-right: 10px;
-z-index: 100;
-padding: 6px 10px;
-font-size: 14px;
-border-radius: 6px;
-border: none;
-background: rgba(255,255,255,0.8);
-}
-
-/* 拡大／閉じるボタン（右上固定） */
-.left-btn {
-position: absolute;
-top: 10px;
-left: 10px;
-z-index: 80;
-
-padding: 6px 12px;
-font-size: 14px;
-
-border: none;
-border-radius: 6px;
-
-background: rgba(255, 255, 255, 0.85);
-color: #000;
-
-box-shadow: 0 2px 6px rgba(0,0,0,0.25);
-
-cursor: pointer;
-backdrop-filter: blur(6px); /* iOS風ガラス効果 */
-transition: all 0.2s ease;
-}
-
-#phone {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  z-index: 20;
-
-  padding: 6px 12px;
-  font-size: 14px;
-
-  border: none;
-  border-radius: 6px;
-
-  background: rgba(255, 255, 255, 0.85);
-  color: #000;
-
-  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
-
-  cursor: pointer;
-  backdrop-filter: blur(6px); /* iOS風ガラス効果 */
-  transition: all 0.2s ease;
-}
-
-#pc {
-  position: absolute;
-  top: 10px;
-  left: 110px;
-  z-index: 20;
-
-  padding: 6px 12px;
-  font-size: 14px;
-
-  border: none;
-  border-radius: 6px;
-
-  background: rgba(255, 255, 255, 0.85);
-  color: #000;
-
-  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
-
-  cursor: pointer;
-  backdrop-filter: blur(6px); /* iOS風ガラス効果 */
-  transition: all 0.2s ease;
-}
+/* -----------------------------------------
+   02. セクション共通レイアウト
+   ----------------------------------------- */
 
 .section {
-  margin-top: 20px;
-}
+  margin: 20px auto;
+  border: 1px solid #777193;
+  background: #f6f6f6;
+  border-radius: 10px;
+  padding: 20px;
+  width: clamp(10px, 90vw, 1040px);
 
-#imageText{
-  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .section-title {
-  font-size: 20px;
+  color: #404040;
+  font-size: 22px;
 }
 
-#about-text{
-  margin-top: 5px;
-  margin-left: 20px;
-  font-size: 15px;
+#imageText {
+  margin-top: 20px;
 }
 
-.shop-section{
-  margin-left: 20px;
-  margin-top: 10px;
-  margin-bottom: 5px;
-  font-size: 18px;
-}
-.shop{
-  margin-left: 40px;
-}
-/* 画面の２分割 */
-/* 
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-} */
-
-/* 上半分（本文） */
-.shop-area {
-  flex: 1;
-  overflow-y: auto;
-  padding: 10px;
-  background: #fff;
-}
-
-/* 店の項目 */
-
-.item {
-  padding: 10px 6px;
-  border-bottom: 1px solid #ccc;
-  cursor: pointer;
-}
-
-.item-label{
-  color: #0645ad;
-  border-bottom: 1px solid #0645ad;
-  padding-bottom: 1px;
-}
-
-
-/* 下半分に固定されるエリア */
-#desc-panel {
-  position: fixed;
-  left: 0;
-  bottom: 0;
+.underline {
+  margin-top: 20px;
   width: 100%;
-  height: 35vh;        /* 画面の高さの半分 */
-  color: #ffffff;
-  /* color: #0645ad; */
-  /* background: #5c7db1; */
-  background: rgba(0, 0, 0, 0.825);
-  border-top: 2px solid #f00;
-  box-sizing: border-box;
-  padding: 16px;
-  
-  overflow: hidden;    /* 中身がはみ出るなら auto にしてスクロールも可 */
+  height: 2px;
+  background-color: #7f6c00;
 }
 
+/* -----------------------------------------
+   03. ヘッダー・タイトル・ナビゲーション
+   （校名・開催情報・固定バナー）
+   ----------------------------------------- */
 
-/*  */
-
-.schedule-section{
-  margin-left: 20px;
-  margin-top: 10px;
-  margin-bottom: 5px;
-  font-size: 18px;
-}
-
-.time{
-  margin-left: 40px;
-  font-size: 15px;
-}
-
-.title{
+.title {
   margin-top: 25px;
   font-size: clamp(25px, 5vw, 36px);
   text-align: center;
 }
 
-.sub-title{
+.sub-title {
   margin-top: 10px;
   font-size: clamp(17px, 3vw, 25px);
   text-align: center;
 }
 
+/* 上部に使える帯バナー（任意で利用） */
 .banner {
   background: linear-gradient(90deg, #ff8a8a, #ff5555);
   color: white;
@@ -400,6 +91,7 @@ html, body {
   font-weight: bold;
 }
 
+/* 固定ナビゲーションバナー #banner */
 .sticky-banner {
   position: sticky;
   top: 0;
@@ -410,20 +102,23 @@ html, body {
   z-index: 1000;
 }
 
+/* ナビメニュー（ul.nav） */
 .nav {
-  display: flex;         /* 横並びにする */
+  display: flex;
   justify-content: space-evenly;
-  list-style: none;      /* 左の点を消す */
+  list-style: none;
   padding: 0;
   margin: 0;
 }
 
+/* li > a の基本スタイル */
 .nav li a {
-  text-decoration: none; /* 下線を消す（必要なら） */
-  color: #eee;           /* 好きな色に */
-  font-size: clamp(9px, 2vw, 18px);
+  text-decoration: none;
+  color: #eee;
+  font-size: clamp(10px, 2vw, 18px);
 }
 
+/* a 全体に対するホバー用などの共通スタイル */
 .nav a {
   text-decoration: none;
   color: #333;
@@ -432,19 +127,27 @@ html, body {
   transition: color 0.2s, border-color 0.2s;
 }
 
+/* 現在表示中セクションのリンクに付与される .active */
 .nav a.active {
-  color: #d9534f;              /* 目立つ赤とか */
-  border-bottom-color: #d9534f; /* 下線を出す */
+  color: #d9534f;
+  border-bottom-color: #d9534f;
 }
 
-[id] {
-  scroll-margin-top:  55px;
-}
+/* -----------------------------------------
+   04. スクロール挙動 & セクションの状態
+   （スムーススクロール・アクティブ表示）
+   ----------------------------------------- */
 
 html {
   scroll-behavior: smooth;
 }
 
+/* アンカー位置調整（固定ナビ分の余白） */
+[id] {
+  scroll-margin-top: 55px;
+}
+
+/* セクションフェード用（JSでクラス制御） */
 section {
   transition: opacity 0.2s, filter 0.2s;
 }
@@ -464,6 +167,375 @@ section.sub-inactive {
   filter: blur(0.6px);
 }
 
-.map{
+/* -----------------------------------------
+   05. three.js セクション（#three-section）
+   キャンバスの表示領域・拡大切り替え
+   ----------------------------------------- */
+
+/* 初期表示時：バナー風レイアウト */
+#three-section.banner {
+  height: 40vh;
+  width: 100%;
+  background: #eee;
+  position: relative;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  padding: 0;
+}
+
+/* 拡大表示時：全画面固定 */
+#three-section.fullscreen {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #000;
+  z-index: 90;
+}
+
+/* three.js のキャンバス領域 */
+#three-canvas {
+  width: 100%;
+  height: 100%;
+  touch-action: 'auto';
+  display: block;
+}
+
+/* 拡大/閉じるボタン（右上） */
+.expand-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 100;
+  padding: 6px 10px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: none;
+  background: rgba(255, 255, 255, 0.8);
+}
+
+/* three.js セクション左上のボタン共通 */
+.left-btn {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 80;
+  padding: 6px 12px;
+  font-size: 14px;
+  border: none;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.85);
+  color: #000;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  transition: all 0.2s ease;
+}
+
+/* デバイス選択ボタン：スマホ */
+#phone {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 20;
+  padding: 6px 12px;
+  font-size: 14px;
+  border: none;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.85);
+  color: #000;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  transition: all 0.2s ease;
+}
+
+/* デバイス選択ボタン：タブレット＆PC */
+#pc {
+  position: absolute;
+  top: 10px;
+  left: 110px;
+  z-index: 20;
+  padding: 6px 12px;
+  font-size: 14px;
+  border: none;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.85);
+  color: #000;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  transition: all 0.2s ease;
+}
+
+/* -----------------------------------------
+   06. three.js UI／コントローラー
+   （移動ボタン・スティックなど）
+   ----------------------------------------- */
+
+/* 丸いコントロールボタン（▲▼や速度など） */
+.control-button {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  font-size: 24px;
+  border: none;
+  border-radius: 30px;
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  z-index: 20;
+  backdrop-filter: blur(4px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  transition: all 0.1s ease-in-out;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+
+/* 横長の情報表示用ボタン（小） */
+.control-square-button {
+  position: absolute;
+  width: 400px;
+  height: 40px;
+  font-size: 24px;
+  border: none;
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  z-index: 20;
+  backdrop-filter: blur(4px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  transition: all 0.1s ease-in-out;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+
+/* ログ表示などに使う大きめのパネル */
+.log-control-square-button {
+  position: absolute;
+  width: 800px;
+  height: 400px;
+  font-size: 24px;
+  border: none;
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  z-index: 20;
+  backdrop-filter: blur(4px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  transition: all 0.1s ease-in-out;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+
+/* コントロールボタンのホバー・クリック時 */
+.control-button:hover {
+  filter: brightness(85%);
+  cursor: pointer;
+}
+
+.control-button:active {
+  filter: brightness(70%);
+}
+
+/* 重ねて表示するアイコン用ラッパー */
+.icon-wrapper {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2em;
+  height: 2em;
+}
+
+/* 薄い背景アイコン */
+.background-icon {
+  position: absolute;
+  color: rgba(0, 0, 0, 0.5);
+  font-size: 1.5em;
+}
+
+/* 手前の濃いアイコン */
+.foreground-icon {
+  position: absolute;
+  color: black;
+  font-size: 1.3em;
+}
+
+/* 左下の円形スティックの当たり判定エリア */
+.circle-ctrl-area {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.5);
+  border: 2px solid #333;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  touch-action: none;
+  cursor: grab;
+  pointer-events: auto;
+}
+
+/* 実際に動かすスティック */
+.circle-ctrl {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.5);
+  border: 2px solid #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  touch-action: none;
+  cursor: grab;
+  pointer-events: auto;
+}
+
+/* UI ボタンをまとめるグループ（任意） */
+#UiGroup {
+  position: relative;
+  width: 10%;
+  height: 590px;
+  border: 1px solid rgba(221, 221, 221, 0.2);
+}
+
+#UiGroup button {
+  position: absolute;
+  left: 0;
+  width: 72px;
+  height: 28px;
+}
+
+/* three.js 用クレジット表示（下部固定） */
+.credits-footer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 6px 12px;
+  font-size: 12px;
+  text-align: center;
+  z-index: 20;
+  box-shadow: 0 -1px 6px rgba(0, 0, 0, 0.12);
+}
+
+.credits-footer a {
+  color: #0645ad;
+  text-decoration: underline;
+}
+
+/* -----------------------------------------
+   07. 「文化祭について」セクション (#about)
+   ----------------------------------------- */
+
+#about-text {
+  margin-top: 5px;
+  margin-left: 20px;
+  font-size: 15px;
+}
+
+/* -----------------------------------------
+   08. 出し物紹介セクション (#shop)
+   1年〜3年・部活・説明パネル
+   ----------------------------------------- */
+
+/* 学年やカテゴリ（ART / ATTRACTION など）の見出し */
+.shop-section {
+  margin-left: 1%;
+  margin-top: 20px;
+  margin-bottom: 5px;
+  font-size: 20px;
+}
+
+/* 出し物リスト全体 */
+.shop {
+  margin-left: 5px;
+  font-size: clamp(15px, 2vw, 20px);
+}
+
+/* 出し物エリアを上下分割する場合の上側（本文側） */
+.shop-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px;
+  background: #fff;
+}
+
+/* 1つ1つの出し物 */
+.item {
+  border-bottom: 1px solid #ccc;
+  cursor: pointer;
+}
+
+/* 出し物のラベル（クリックしやすいよう余白を広めに） */
+.item-label {
+  display: inline-block;
+  border: 10px solid transparent;
+  color: #0645ad;
+}
+
+/* 下部固定の説明パネル（※説明欄） */
+#desc-panel {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 35vh;
+  color: #ffffff;
+  background: rgba(0, 0, 0, 0.825);
+  border-top: 2px solid #f00;
+  box-sizing: border-box;
+  padding: 16px;
+  overflow: hidden;
+  z-index: 30;
+}
+
+/* -----------------------------------------
+   09. タイムスケジュールセクション (#schedule)
+   ----------------------------------------- */
+
+.schedule-section {
+  margin-left: 20px;
+  margin-top: 10px;
+  margin-bottom: 5px;
+  font-size: 18px;
+}
+
+.time {
+  margin-left: 40px;
+  font-size: 15px;
+}
+
+/* -----------------------------------------
+   10. アクセスセクション (#access)
+   ----------------------------------------- */
+
+.map {
   font-size: clamp(10px, 100vw, 360px);
 }
+
+/* -----------------------------------------
+   11. フッター全体
+   （HTML の <footer class="section"> は
+     .section の共通スタイルをそのまま利用）
+   ----------------------------------------- */
+/* 特別なスタイルが必要になったら追加してください */

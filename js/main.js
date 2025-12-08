@@ -81,8 +81,17 @@ window.addEventListener('pointerdown', (e) => {
   }
 });
       
-window.addEventListener('pointermove', (e) => {
+window.addEventListener('mousemove', (e) => {
   handlePointer(e, "MOVE");
+    // 2分割
+    const el = document.elementFromPoint(e.clientX, e.clientY);
+    const label = el?.closest('.item-label');
+  
+    if (label) {
+      // 文字の上にいる → 表示
+      desc_panel.style.display = 'block';
+      desc_panel.textContent = label.textContent; // とか概要文に差し替え
+    }
 });      
 
 const canvas1 = document.getElementById('three-section');
@@ -169,6 +178,9 @@ function detectCenterSection() {
           sec.classList.add("inactive");
           sec.classList.remove("active");
           sec.classList.remove("sub-inactive");
+          if (sec.id === 'shop'){
+            desc_panel.style.display = 'none';
+          }
         }
       });
 
@@ -198,6 +210,9 @@ function detectCenterSection() {
       } else {
         sec.classList.add("sub-inactive");
         sec.classList.remove("active");
+        if (sec.id === 'shop'){
+          desc_panel.style.display = 'none';
+        }
       }
     });
   }
@@ -223,22 +238,29 @@ document.querySelectorAll('.nav a[href^="#"]').forEach(link => {
   link.addEventListener('click', (e) => {
     e.preventDefault();
 
-    ActiveLink = true
+    ActiveLink = true;
     const id = link.getAttribute('href');
     LinkSection = id.slice(1);
-    InLinkSection = false
+    InLinkSection = false;
     const target = document.querySelector(id);
     if (!target) return;
-
+  
     const rect = target.getBoundingClientRect();
     const sectionTop = rect.top + window.scrollY;
     const sectionHeight = rect.height;
     const windowHeight = window.innerHeight;
-
-    // セクションが画面中央に来るようにスクロール位置計算
-    const targetPos =
-      sectionTop - (windowHeight / 2) + (sectionHeight / 2);
-
+  
+    let targetPos;
+  
+    // セクションが画面より大きい場合：
+    // → セクションの「先頭」が画面中央に来るようにする
+    if (sectionHeight > windowHeight) {
+      targetPos = sectionTop - 70;
+    } else {
+      // セクションが短い場合：
+      // → セクションの「中央」が画面中央に来るようにする（元のロジック）
+      targetPos = sectionTop - (windowHeight / 2) + (sectionHeight / 2);
+    }
     window.scrollTo({
       top: targetPos,
       behavior: 'smooth'
