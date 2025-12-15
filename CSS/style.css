@@ -24,11 +24,91 @@
   box-sizing: border-box;
 }
 
+
+/* ★ラメ層：sparkle が付いている要素の上にキラキラを載せる */
+
+/* 固定ナビゲーションバナー #banner */
+.sticky-banner {
+  position: sticky;
+  top: 0;
+  margin-top: 12px;
+
+  /* グラデーション（JS で書き換えるならそのまま） */
+  /* --grad1: hsl(0, 90%, 55%, 0.4);
+  --grad2: hsl(120, 90%, 55%, 0.4);
+  background: linear-gradient(135deg, var(--grad1), var(--grad2)); */
+
+  /* ガラスっぽいぼかし */
+  backdrop-filter: blur(8px);
+
+  padding: 15px;
+  color: #000;
+  z-index: 1000;
+}
+
+/* 粒の位置が上下で濃淡ある sparkle  */
+.sticky-banner.sparkle {
+  position: sticky;
+  top: 0;
+  overflow: hidden;
+  z-index: 1000;
+  padding: 15px;
+
+  backdrop-filter: blur(8px);
+
+  /* ↓ 虹色背景（スクロール対応） */
+  --grad1: hsl(0, 90%, 55%, 0.2);
+  --grad2: hsl(120, 90%, 55%, 0.2);
+  background: linear-gradient(135deg, var(--grad1), var(--grad2));
+}
+
+/* ▼ 粒 (ラメ) 層 */
+.sticky-banner.sparkle::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+
+  /* 粒の模様（均等配置） */
+  background-image:
+  /* radial-gradient(circle, #eaaa73, transparent 100%), */
+  radial-gradient(circle, rgb(255, 255, 255), transparent 100%);
+
+  background-size: 8px 8px;
+
+  /* ★上下濃度グラデーション（粒に重ねる！）*/
+  mask-image: 
+  linear-gradient(
+    to bottom,
+    rgba(0,0,0,1),    /* ① 上：完全透明 */
+    rgba(0,0,0,0),   /* ③ 中下：かなり見える */
+    rgba(0,0,0,1)   /* ④ 下：完全に濃い */
+  );
+  
+  animation: sparkleMove 30s linear infinite;
+  opacity: 1;
+}
+
+/* 粒の流れのアニメーション */
+@keyframes sparkleMove {
+  0%   { background-position: 0px 0px; }
+  100% { background-position: 300px 300px; }
+}
+
+
 body {
   font-family: "游ゴシック体", "YuGothic", "游ゴシック", "Yu Gothic",
     "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro",
     "メイリオ", "Meiryo", sans-serif;
   color: #333;
+
+  /* JS から書き換える用に CSS変数を使う */
+  --grad1: hsl(0, 90%, 55%, 0.1);
+  --grad2: hsl(60, 90%, 55%, 0.1);
+
+  background: linear-gradient(135deg, var(--grad1), var(--grad2));
+  transition: background 0.2s linear;
+  
 }
 
 /* -----------------------------------------
@@ -38,7 +118,8 @@ body {
 .section {
   margin: 20px auto;
   border: 1px solid #777193;
-  background: #f6f6f6;
+  background: rgba(238, 238, 238, 0.5);
+  
   border-radius: 10px;
   padding: 20px;
   width: clamp(10px, 90vw, 1040px);
@@ -68,6 +149,9 @@ body {
    03. ヘッダー・タイトル・ナビゲーション
    （校名・開催情報・固定バナー）
    ----------------------------------------- */
+/* #top{
+  background: #226c6b;
+} */
 
 .title {
   margin-top: 25px;
@@ -96,9 +180,20 @@ body {
   position: sticky;
   top: 0;
   margin-top: 12px;
-  background: #0645ad;
+
+  /* JS から書き換える用に CSS変数を使う */
+  --grad1: hsl(0, 90%, 55%);
+  --grad2: hsl(60, 90%, 55%);
+
+  background: linear-gradient(135deg, var(--grad1), var(--grad2));
+  /* background-attachment: fixed; スクロールしても背景を固定 */
+  transition: background 0.2s linear;
+
+  /* 背景ぼかし */
+  backdrop-filter: blur(8px);
   padding: 15px;
-  color: white;
+
+  color: rgb(0, 0, 0);
   z-index: 1000;
 }
 
@@ -114,7 +209,7 @@ body {
 /* li > a の基本スタイル */
 .nav li a {
   text-decoration: none;
-  color: #eee;
+  color: #000000;
   font-size: clamp(10px, 2vw, 18px);
 }
 
@@ -460,11 +555,16 @@ section.sub-inactive {
 
 /* 学年やカテゴリ（ART / ATTRACTION など）の見出し */
 .shop-section {
-  margin-left: 1%;
-  margin-top: 20px;
+  margin-top: 30px;
   margin-bottom: 5px;
   font-size: 20px;
 }
+
+/* .inner{
+    display: flex;
+  flex-direction: column;
+  align-items: center;
+} */
 
 /* 出し物リスト全体 */
 .shop {

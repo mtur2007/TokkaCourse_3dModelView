@@ -267,3 +267,27 @@ document.querySelectorAll('.nav a[href^="#"]').forEach(link => {
     });
   });
 });
+
+// スクロールでナビの色を鮮やかに変える
+window.addEventListener("scroll", () => {
+  const scrollMax = document.body.scrollHeight - innerHeight;
+  if (scrollMax <= 0) return;
+
+  const ratio = scrollY / scrollMax; // 0〜1
+
+  // 色相をループ
+  const hue1 = ratio * 360;
+  const hue2 = (ratio * 360 + 120) % 360;
+
+  const grad1 = `hsl(${hue1}, 90%, 55%, 0.1)`;
+  const grad2 = `hsl(${hue2}, 90%, 55%, 0.1)`;
+
+  // CSS変数にセット
+  const body = document.querySelector("body");
+  body.style.setProperty("--grad1", `hsl(${hue1}, 90%, 55%, 0.08)`);
+  body.style.setProperty("--grad2", `hsl(${hue2}, 90%, 55%, 0.08)`);
+
+  const banner = document.querySelector(".sticky-banner");
+  banner.style.setProperty("--grad1", `hsl(${hue1}, 90%, 55%, 0.2)`);
+  banner.style.setProperty("--grad2", `hsl(${hue2}, 90%, 55%, 0.2)`);
+});

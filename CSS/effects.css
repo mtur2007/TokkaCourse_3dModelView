@@ -3,18 +3,18 @@
 ============================ */
 
 /* 基本：太字タイトル */
-.fx-title {
+.fx-title:hover {
     font-weight: bold;
   }
   
   /* 発光（通常） */
-  .fx-glow {
+  /* .fx-glow {
     text-shadow:
       0 0 1px currentColor,
       0 0 2px currentColor,
       0 0 3px currentColor;
     transition: 0.25s;
-  }
+  } */
   
   /* hoverで光増し＆ちょっと拡大 */
   .fx-glow:hover {
@@ -26,7 +26,7 @@
   }
   
   /* 縁取り（文字のアウトライン） */
-  .fx-outline {
+  .fx-outline:hover {
     -webkit-text-stroke: 1px rgba(0,0,0,0.7);
   }
   
@@ -61,14 +61,15 @@
   }
   
   /* ---- 色分け（学年など） ---- */
-  
+  #fes-name {color:#deffcf}
+
   /* 1年生 */
   /* .melos      { color:#ffae2c; }
   .photo      { color:#ff5a9a; }
   .sekai      { color:#b788ff; } */
   
   /* 2年生 */
-  .horror   { color:#ff3f3f; } /* 好きな色に変えてOK */
+  .horror:hover   { color:#ff3f3f; }
   .ennichi  { color:#009a21; }
   .escape   { color:#00d4ff; }
   
