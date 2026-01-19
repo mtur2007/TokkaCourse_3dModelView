@@ -1,41 +1,42 @@
-// world_creat.js : 3D空間に表示するモデル(glbファイル)を読み込み 、3D空間に表示するのファイル
-
 import * as THREE from 'three';
 
 // 必ず three と同バージョンの examples モジュールを使う（あなたは three@0.169 を使っているので合わせる）
 import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/loaders/DRACOLoader.js';
 
-export async function WorldCreat(scene){
+
+export async function WorldCreat(scene, right=true){
 
 // ライト作成
-const dirLight = new THREE.DirectionalLight(0xffeeee, 3
-);
+const dirLight = new THREE.DirectionalLight(0xffeeee, 3);
 dirLight.name = 'dirLight'
 
-// ライトの位置（光が来る方）
-dirLight.position.set(200, 200, 200); // 例: 斜め上（単位はシーンの単位に依存）
-// dirLight.position.set( 1, 3, 1); // 例: 斜め上（単位はシーンの単位に依存）
+if (right){
 
-// ターゲット（ライトが向く場所）
-dirLight.target.position.set(0, 0, 0); // 原点を向かせる例
+  // ライトの位置（光が来る方）
+  dirLight.position.set(200, 200, 200); // 例: 斜め上（単位はシーンの単位に依存）
+  // dirLight.position.set( 1, 3, 1); // 例: 斜め上（単位はシーンの単位に依存）
 
-// ターゲットは scene に追加する必要がある
-scene.add(dirLight.target);
-scene.add(dirLight);
+  // ターゲット（ライトが向く場所）
+  dirLight.target.position.set(0, 0, 0); // 原点を向かせる例
 
-// // --- 既存の DirectionalLight(dirLight) にシャドウ設定を追加 ---
-dirLight.castShadow = true;           // ライトがシャドウを投げる
+  // ターゲットは scene に追加する必要がある
+  scene.add(dirLight.target);
+  scene.add(dirLight);
 
-dirLight.shadow.mapSize.set(2000, 2000); // 必要に応じて解像度を下げる
+  // // --- 既存の DirectionalLight(dirLight) にシャドウ設定を追加 ---
+  dirLight.castShadow = true;           // ライトがシャドウを投げる
+  // dirLight.shadow.mapSize.width = 4000; // 解像度（要調整：2048/1024/4096）
+  // dirLight.shadow.mapSize.height = 4000;
+  dirLight.shadow.mapSize.set(4000, 4000); // 必要に応じて解像度を下げる
+  dirLight.shadow.radius = 4;           // ソフトネス（three r0.150+ で有効）
+  dirLight.shadow.bias = -0.0005;       // 影のアーティファクト（自動調整必要）
+  dirLight.shadow.normalBias = 0.5;    // 法線オフセット（改善される場合あり）
 
-dirLight.shadow.radius = 4;           // ソフトネス（three r0.150+ で有効）
-dirLight.shadow.bias = -0.0005;       // 影のアーティファクト（自動調整必要）
-dirLight.shadow.normalBias = 0.5;    // 法線オフセット（改善される場合あり）
-
-// 4) マトリクスを強制更新（これで即時反映）
-dirLight.updateMatrixWorld(true);
-dirLight.target.updateMatrixWorld(true);
+  // 4) マトリクスを強制更新（これで即時反映）
+  dirLight.updateMatrixWorld(true);
+  dirLight.target.updateMatrixWorld(true);
+}
 
 // ----------------- 「床（ground）」を追加して影を受けさせる（GridHelper の下に置く） -----------------
 const groundGeo = new THREE.PlaneGeometry(1000, 1000);
@@ -45,7 +46,7 @@ ground.rotation.x = -Math.PI / 2;
 ground.position.y = 0; // 必要ならシーンの床の高さに合わせる
 ground.receiveShadow = true; // 影を受ける
 ground.name = 'GroundPlane';
-scene.add(ground);
+// scene.add(ground);
 
 
 // ----------------- シャドウの自動最適化（モデルに合わせてシャドウカメラを調整） -----------------
@@ -116,6 +117,7 @@ async function loadModelToScene(modelUrl, options = {}, adjustment=true, sinkans
         const root = gltf.scene || gltf.scenes[0];
         if (name != false){
           root.name = name
+          console.log('モデル名を設定しました:', name);
         }
 
         if (!root) return reject(new Error('glTF にシーンがありません'));
@@ -186,11 +188,10 @@ async function loadModelToScene(modelUrl, options = {}, adjustment=true, sinkans
 
         if (adjustment){
           // root.rotation.y = 100 * Math.PI / 180
-          root.position.y = 1
-          // root.position.set(145,40,-175)
+          root.position.set(0,0,0)
           // root.scale.setScalar(0.45);
         } else {
-          root.position.set(0.5,0,0)
+          root.position.set(0,0)
           root.scale.setScalar(0.5);
          
           // --- root以下のメッシュに対してマテリアル調整 ---
@@ -256,7 +257,17 @@ async function loadModelToScene(modelUrl, options = {}, adjustment=true, sinkans
 
 // // --------------- 実行例：model.glb を読み込む ----------------
 // ここのファイル名をあなたの .glb の名前に変えてください
-await loadModelToScene('tokka_class.glb', { autoCenter: true, autoScaleMax: 10000, scaleIfLarge: 0.001, name:'SchoolModel' })
+// await loadModelToScene('tokka_class.glb', { autoCenter: true, autoScaleMax: 10000, scaleIfLarge: 0.001, name:'SchoolModel' })
+//   .then((root) => {
+//     console.log('GLB loaded and added to scene:', root);
+//   })
+//   .catch((err) => {
+//     console.error('モデルの読み込みで失敗:', err);
+//     alert('モデル読み込みに失敗しました。コンソールを確認してください。');
+//   });
+// }
+
+await loadModelToScene('glb/horror_map.glb', { autoCenter: true, autoScaleMax: 10000, scaleIfLarge: 0.001, name:'SchoolModel' })
   .then((root) => {
     console.log('GLB loaded and added to scene:', root);
   })
@@ -264,4 +275,8 @@ await loadModelToScene('tokka_class.glb', { autoCenter: true, autoScaleMax: 1000
     console.error('モデルの読み込みで失敗:', err);
     alert('モデル読み込みに失敗しました。コンソールを確認してください。');
   });
+
+return {
+  light: dirLight,
+};
 }

@@ -1,641 +1,1067 @@
-@charset "UTF-8";
-/* =========================================
-   第一学院高等学校お茶の水校 文化祭サイト CSS
-   -----------------------------------------
-   01. 初期設定・共通スタイル
-   02. セクション共通レイアウト
-   03. ヘッダー・タイトル・ナビゲーション
-   04. スクロール挙動 & セクションの状態
-   05. three.js セクション（レイアウト）
-   06. three.js UI／コントローラー
-   07. 「文化祭について」セクション
-   08. 出し物紹介セクション
-   09. タイムスケジュールセクション
-   10. アクセスセクション
-   ========================================= */
-
-/* -----------------------------------------
-   01. 初期設定・共通スタイル
-   ----------------------------------------- */
-
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-
-/* ★ラメ層：sparkle が付いている要素の上にキラキラを載せる */
-
-/* 固定ナビゲーションバナー #banner */
-.sticky-banner {
-  position: sticky;
-  top: 0;
-  margin-top: 12px;
-
-  /* グラデーション（JS で書き換えるならそのまま） */
-  /* --grad1: hsl(0, 90%, 55%, 0.4);
-  --grad2: hsl(120, 90%, 55%, 0.4);
-  background: linear-gradient(135deg, var(--grad1), var(--grad2)); */
-
-  /* ガラスっぽいぼかし */
-  backdrop-filter: blur(8px);
-
-  padding: 15px;
-  color: #000;
-  z-index: 1000;
-}
-
-/* 粒の位置が上下で濃淡ある sparkle  */
-.sticky-banner.sparkle {
-  position: sticky;
-  top: 0;
-  overflow: hidden;
-  z-index: 1000;
-  padding: 15px;
-
-  backdrop-filter: blur(8px);
-
-  /* ↓ 虹色背景（スクロール対応） */
-  --grad1: hsl(0, 90%, 55%, 0.2);
-  --grad2: hsl(120, 90%, 55%, 0.2);
-  background: linear-gradient(135deg, var(--grad1), var(--grad2));
-}
-
-/* ▼ 粒 (ラメ) 層 */
-.sticky-banner.sparkle::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-
-  /* 粒の模様（均等配置） */
-  background-image:
-  /* radial-gradient(circle, #eaaa73, transparent 100%), */
-  radial-gradient(circle, rgb(255, 255, 255), transparent 100%);
-
-  background-size: 8px 8px;
-
-  /* ★上下濃度グラデーション（粒に重ねる！）*/
-  mask-image: 
-  linear-gradient(
-    to bottom,
-    rgba(0,0,0,1),    /* ① 上：完全透明 */
-    rgba(0,0,0,0),   /* ③ 中下：かなり見える */
-    rgba(0,0,0,1)   /* ④ 下：完全に濃い */
-  );
-  
-  animation: sparkleMove 30s linear infinite;
-  opacity: 1;
-}
-
-/* 粒の流れのアニメーション */
-@keyframes sparkleMove {
-  0%   { background-position: 0px 0px; }
-  100% { background-position: 300px 300px; }
+@font-face {
+  font-family: "impact";
+  src:
+    url("/fonts/impact-webfont.woff2") format("woff2"),
+    url("/fonts/impact-webfont.woff") format("woff");
+  font-display: swap;
 }
 
 
 body {
-  font-family: "游ゴシック体", "YuGothic", "游ゴシック", "Yu Gothic",
-    "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro",
-    "メイリオ", "Meiryo", sans-serif;
-  color: #333;
-
-  /* JS から書き換える用に CSS変数を使う */
-  --grad1: hsl(0, 90%, 55%, 0.1);
-  --grad2: hsl(60, 90%, 55%, 0.1);
-
-  background: linear-gradient(135deg, var(--grad1), var(--grad2));
-  transition: background 0.2s linear;
-  
+  font-family: 'Arial', 'Hiragino Sans', 'Meiryo', sans-serif;
+  background: #f5f5f5;
+  line-height: 1.6;
 }
 
-/* -----------------------------------------
-   02. セクション共通レイアウト
-   ----------------------------------------- */
+/* ヘッダー */
+header {
+  font-family: "impact", sans-serif;
+  background: white;
+  position: relative;
+  z-index: 50;
+  overflow: hidden;
+  padding: 0;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
 
-.section {
-  margin: 20px auto;
-  border: 1px solid #777193;
-  background: rgba(238, 238, 238, 0.5);
-  
-  border-radius: 10px;
-  padding: 20px;
-  width: clamp(10px, 90vw, 1040px);
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: clamp(8px, 0.7vw, 16px);
+  position: relative;
+  max-width: 1040px;
+  margin: 0 auto;
 
+}
+
+.header-container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: white;
+  z-index: 1;
+}
+
+.header-left {
+  position: relative;
+}
+
+.fes-title {
+  display: flex;
+  flex-direction: column;
+  /* gap: 1px; */
+  position: relative;
+}
+
+.fes-main {
+  animation: fesFeedIn 1.2s ease-out forwards;
+  animation-delay: 0.1s;
+}
+
+.fes-sub {
+  animation: fesFeedIn 1.6s ease-out forwards;
+  animation-delay: 0.01s;
+}
+
+.fes-year {
+  animation: fesFeedIn 2s ease-out forwards;
+  animation-delay: 0.01s;
+}
+
+.fes-title {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.fes-main,
+.fes-sub,
+.fes-year {
+  font-size: clamp(32px, 4.6vw, 64px);
+  color: #231815;
+  letter-spacing: 1px;
+  line-height: 0.9;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  z-index: 0;
+}
+
+.fes-shadow-main {
+  animation: fesFeedIn 1.2s ease-out forwards;
+  animation-delay: 0.1s;
+}
+
+.fes-shadow-sub {
+  animation: fesFeedIn 1.6s ease-out forwards;
+  animation-delay: 0.01s;
+}
+
+.fes-shadow-year {
+  animation: fesFeedIn 2s ease-out forwards;
+  animation-delay: 0.01s;
+}
+
+
+.fes-shadow-main,
+.fes-shadow-sub,
+.fes-shadow-year {
+  font-size: clamp(32px, 4.6vw, 64px);
+  color: #C3E6F9;
+  letter-spacing: 1px;
+  line-height: 0.9;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  z-index: 0;
+}
+
+.fes-main,
+.fes-shadow-main {
+  z-index: 2;
+}
+
+.fes-shadow-sub,
+.fes-shadow-year {
+  z-index: 0;
+}
+
+.fes-raise {
+  z-index: 2;
+}
+
+.fes-shadow {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-top: clamp(-40px, -2.1vw, -20px);
+  transform: scaleY(-1);
+  position: relative;
+  z-index: 1;
+}
+
+.fes-shadow::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: white;
+  z-index: 1;
+  pointer-events: none;
+}
+
+@keyframes fesFeedIn {
+  0% {
+    transform: translateX(-140%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* 線を描くアニメーション */
+.line-animation {
+  position: absolute;
+  bottom: -20px;
+  right: -100px;
+  width: 400px;
+  height: 200px;
+  pointer-events: none;
+  display: block;         /* 余計な隙間防止 */
+}
+
+.draw-line {
+  fill: none;
+  stroke: #4a90e2;
+  stroke-width: clamp(2px, 0.3vw, 4px);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 400;
+  stroke-dashoffset: 400;
+  animation: drawLine 2s ease-out forwards;
+  animation-delay: 0.5s;
+}
+
+.header-lines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.draw-line-horizontal {
+  stroke: #445ba0;
+  stroke-width: clamp(2px, 0.3vw, 4px);
+  stroke-linecap: round;
+  stroke-dasharray: 1400;
+  stroke-dashoffset: 1400;
+  animation: drawLineRatio 3s ease-out forwards;
+  animation-delay: 0.5s;
+}
+
+.draw-line-vertical {
+  stroke: #357abd;
+  stroke-width: clamp(2px, 0.3vw, 4px);
+  stroke-linecap: round;
+  stroke-dasharray: 150;
+  stroke-dashoffset: 150;
+  animation: drawLine 1s ease-out forwards;
+  animation-delay: 1.5s;
+}
+
+.draw-line-arrow {
+  fill: none;
+
+  stroke: #445ba0;
+  stroke-width: clamp(3px, 0.5vw, 7px);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: drawLine 3s ease-out forwards;
+  animation-delay: 0.5s;
+}
+
+.header-right {
+  display: flex;
+  gap: clamp(12px, 1.4vw, 20px);
+  z-index: 2;
+}
+
+.date-box {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  background: #efefef;
+  padding: clamp(10px, 1.1vw, 15px) clamp(14px, 1.5vw, 20px);
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  min-width: clamp(72px, 7.1vw, 100px);
+  animation: slideInRight 1s ease-out;
+  transition: transform 0.3s ease;
+  position: relative;
+}
+
+.date-box::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 3px solid #445ba0;
+  border-radius: 8px;
+  stroke-dasharray: 400;
+  stroke-dashoffset: 400;
+  animation: drawBoxBorder 1.5s ease-out forwards;
+  animation-delay: 1s;
+  opacity: 0;
+}
+
+.date-box:hover {
+  transform: translateY(-5px) scale(1.05);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+}
+
+.date-box:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.date-box:nth-child(2)::before {
+  animation-delay: 1.2s;
+}
+
+.date-large {
+  font-size: clamp(24px, 3.4vw, 48px);
+  font-weight: 900;
+  color: #2c3e50;
+  line-height: 1;
+}
+
+.date-day {
+  font-size: clamp(12px, 1.4vw, 20px);
+  font-weight: 700;
+  color: #555;
+  letter-spacing: 2px;
+}
+
+.blue-stripe {
+  position: absolute;
+  right: calc(50% - 50vw);
+  top: 0;
+  bottom: 0;
+  width: clamp(36px, 5.7vw, 80px);
+  background:#445ba0;
+  animation: expandStripe 1.5s ease-out;
+  z-index: 1;
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes expandStripe {
+  from {
+    width: 0;
+  }
+  to {
+    width: 80px;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes drawLine {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes drawLineRatio {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes drawBoxBorder {
+  0% {
+    clip-path: polygon(0 0, 0 0, 0 0, 0 0);
+    opacity: 1;
+  }
+  25% {
+    clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+  }
+  50% {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+  75% {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+  100% {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    opacity: 0.5;
+  }
+}
+
+/* ナビゲーション */
+#banner {
+  background: white;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* バナー内のナビを横並び固定 */
+#banner .nav{
+  display: flex;
+  flex-direction: row;     /* ← これを明示 */
+  flex-wrap: nowrap;       /* ← 折り返し禁止 */
+  justify-content: flex-start;
+  align-items: center;
+
+  margin: 0;
+  padding: 15px 10px;
+
+  overflow: visible;
+}
+
+/* 各項目は縮ませない */
+#banner .nav li{
+  flex: 0 0 auto;
+  margin: 0 12px;
+}
+
+/* 文字が折り返されて縦に見えるのを防止 */
+#banner .nav a{
+  white-space: nowrap;
+}
+
+.nav-marquee {
+  display: flex;
+  width: max-content;
+  align-items: center;
+  animation: banner-marquee 28s linear infinite;
+}
+
+#banner .nav.marquee-track {
+  padding: 15px 10px;
+  margin: 0;
+  list-style: none;
+}
+
+@keyframes banner-marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  list-style: none;
+  padding: 15px 0;
+  flex-wrap: nowrap;   /* ← 折り返さない */
+}
+
+.nav li {
+  margin: 5px 15px;
+}
+
+.nav a {
+  text-decoration: none;
+  color: #667eea;
+  font-weight: bold;
+  padding: 8px 16px;
+  border-radius: 20px;
+  transition: none;
+}
+
+.nav a:hover {
+  background: #667eea;
+  color: white;
+}
+
+/* セクション共通 */
+.section {
+  padding: 30px 20px;
+  max-width: 1040px;
+  margin: 0 auto;
 }
 
 .section-title {
-  color: #404040;
-  font-size: 22px;
+  text-align: center;
+  font-size: 32px;
+  color: #667eea;
+  margin-bottom: 20px;
+  padding: 20px;
+  position: relative;
 }
 
-#imageText {
-  margin-top: 20px;
+.section-title::after {
+  content: '';
+  display: block;
+  width: 150px;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #667eea, transparent);
+  margin: 10px auto 0;
 }
 
-.underline {
-  margin-top: 20px;
+.section-subtitle {
+  text-align: center;
+  font-size: 20px;
+  color: #667eea;
+  margin-bottom: 40px;
+  /* padding: 20px; */
+  position: relative;
+}
+
+.section-subtitle::after {
+  content: '';
+  display: block;
+  width: 150px;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #667eea, transparent);
+  margin: 10px auto 0;
+}
+
+.section-title-noline {
+  text-align: center;
+  font-size: 32px;
+  color: #667eea;
+  margin-top: 60px;
+  padding: 0px;
+  position: relative;
+}
+
+
+.control-help {
+  display: none;
+  grid-template-columns: max-content max-content max-content;
+
+  column-gap: 8px;
+  row-gap: 6px;
+
+  justify-content: center; /* 全体を中央 */
+  text-align: left;        /* 行は左揃え */
+
+  font-family: system-ui, sans-serif;
+  font-size: 18px;
+  color: #667eea;
+
+  margin: 0 auto 40px;
+  margin-top: 40px;
+}
+
+#main-operation{
+  font-size: clamp(10px,3.7vw, 22px)
+}
+
+.game-operation {
+  text-align: left;
+  width: max-content;
+  margin: 0 auto;
+}
+
+
+/* 1列目（操作名）を少し強調 */
+.control-help > div:nth-child(3n + 1) {
+  font-weight: 600;
+}
+
+#three-section {
+  position: relative;
   width: 100%;
-  height: 2px;
-  background-color: #7f6c00;
+  height: 80vh;
+  background: rgba(0,0,0,0.1);
+  border-radius: 15px;
+  /* margin: 10px auto; */
+  max-width: 1200px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 }
 
-/* -----------------------------------------
-   03. ヘッダー・タイトル・ナビゲーション
-   （校名・開催情報・固定バナー）
-   ----------------------------------------- */
-/* #top{
-  background: #226c6b;
+#three-section.section {
+  padding: 0px;
+  margin: 0 auto 30px;
+   width: calc(100% - 20%);
+}
+
+/* #three-section.banner {
+  position: relative;
+  width: 100%;
+  height: 80vh;
+  max-width: 1200px;
+  border-radius: 15px;
+  margin: 0 auto;
 } */
 
-.title {
-  margin-top: 25px;
-  font-size: clamp(25px, 5vw, 36px);
-  text-align: center;
-}
-
-.sub-title {
-  margin-top: 10px;
-  font-size: clamp(17px, 3vw, 25px);
-  text-align: center;
-}
-
-/* 上部に使える帯バナー（任意で利用） */
-.banner {
-  background: linear-gradient(90deg, #ff8a8a, #ff5555);
-  color: white;
-  padding: 15px 0;
-  text-align: center;
-  font-size: clamp(18px, 3vw, 28px);
-  font-weight: bold;
-}
-
-/* 固定ナビゲーションバナー #banner */
-.sticky-banner {
-  position: sticky;
-  top: 0;
-  margin-top: 12px;
-
-  /* JS から書き換える用に CSS変数を使う */
-  --grad1: hsl(0, 90%, 55%);
-  --grad2: hsl(60, 90%, 55%);
-
-  background: linear-gradient(135deg, var(--grad1), var(--grad2));
-  /* background-attachment: fixed; スクロールしても背景を固定 */
-  transition: background 0.2s linear;
-
-  /* 背景ぼかし */
-  backdrop-filter: blur(8px);
-  padding: 15px;
-
-  color: rgb(0, 0, 0);
-  z-index: 1000;
-}
-
-/* ナビメニュー（ul.nav） */
-.nav {
-  display: flex;
-  justify-content: space-evenly;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-/* li > a の基本スタイル */
-.nav li a {
-  text-decoration: none;
-  color: #000000;
-  font-size: clamp(10px, 2vw, 18px);
-}
-
-/* a 全体に対するホバー用などの共通スタイル */
-.nav a {
-  text-decoration: none;
-  color: #333;
-  padding: 4px 8px;
-  border-bottom: 2px solid transparent;
-  transition: color 0.2s, border-color 0.2s;
-}
-
-/* 現在表示中セクションのリンクに付与される .active */
-.nav a.active {
-  color: #d9534f;
-  border-bottom-color: #d9534f;
-}
-
-/* -----------------------------------------
-   04. スクロール挙動 & セクションの状態
-   （スムーススクロール・アクティブ表示）
-   ----------------------------------------- */
-
-html {
-  scroll-behavior: smooth;
-}
-
-/* アンカー位置調整（固定ナビ分の余白） */
-[id] {
-  scroll-margin-top: 55px;
-}
-
-/* セクションフェード用（JSでクラス制御） */
-section {
-  transition: opacity 0.2s, filter 0.2s;
-}
-
-section.active {
-  opacity: 1;
-  filter: none;
-}
-
-section.inactive {
-  opacity: 0.2;
-  filter: blur(1px);
-}
-
-section.sub-inactive {
-  opacity: 0.6;
-  filter: blur(0.6px);
-}
-
-/* -----------------------------------------
-   05. three.js セクション（#three-section）
-   キャンバスの表示領域・拡大切り替え
-   ----------------------------------------- */
-
-/* 初期表示時：バナー風レイアウト */
-#three-section.banner {
-  height: 40vh;
-  width: 100%;
-  background: #eee;
-  position: relative;
-  margin-top: 10px;
-  margin-bottom: 20px;
-  padding: 0;
-}
-
-/* 拡大表示時：全画面固定 */
 #three-section.fullscreen {
   position: fixed;
-  inset: 0;
+  top: 0;
+  left: 0;
   width: 100vw;
   height: 100vh;
-  background: #000;
-  z-index: 90;
+  max-width: none;
+  border-radius: 0;
+  margin: 0;
+  z-index: 999;
 }
 
-/* three.js のキャンバス領域 */
 #three-canvas {
   width: 100%;
   height: 100%;
-  touch-action: 'auto';
   display: block;
 }
 
-/* 拡大/閉じるボタン（右上） */
+#school-iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: none;
+}
+
+/* ボタンスタイル */
 .expand-btn {
   position: absolute;
-  top: 10px;
-  right: 10px;
-  z-index: 100;
-  padding: 6px 10px;
-  font-size: 14px;
-  border-radius: 6px;
+  top: 20px;
+  right: 20px;
+  padding: 10px 20px;
+  background: rgba(255,255,255,0.9);
   border: none;
-  background: rgba(255, 255, 255, 0.8);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+  transition: all 0.3s;
 }
 
-/* three.js セクション左上のボタン共通 */
+.expand-btn:hover {
+  background: white;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px rgba(0,0,0,0.3);
+}
+
 .left-btn {
   position: absolute;
-  top: 10px;
-  left: 10px;
-  z-index: 80;
-  padding: 6px 12px;
-  font-size: 14px;
-  border: none;
-  border-radius: 6px;
-  background: rgba(255, 255, 255, 0.85);
-  color: #000;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  left: 20px;
+  padding: 12px 24px;
+  background: rgba(255,255,255,0.9);
+  border: 2px solid #667eea;
+  border-radius: 25px;
   cursor: pointer;
-  backdrop-filter: blur(6px);
-  transition: all 0.2s ease;
+  font-size: 14px;
+  font-weight: bold;
+  transition: all 0.3s;
 }
 
-/* デバイス選択ボタン：スマホ */
-#phone {
+.game-select {
+  position: relative;
+  width: min(100%, 1000px);
+  margin: 16px auto 24px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+}
+
+.game-select .left-btn {
+  white-space: nowrap;
+}
+
+.game-select .left-btn {
+  position: static;
+  left: auto;
+}
+
+#toggle-daynight {
+  top: 20px;
+  background: rgba(255,100,100,0.9);
+  color: white;
+  border-color: #ff6b6b;
+}
+
+.left-btn:hover {
+  transform: translateX(5px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* コントローラー */
+.circle-ctrl-area {
   position: absolute;
-  top: 10px;
-  left: 10px;
-  z-index: 20;
-  padding: 6px 12px;
-  font-size: 14px;
-  border: none;
-  border-radius: 6px;
-  background: rgba(255, 255, 255, 0.85);
-  color: #000;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
-  cursor: pointer;
-  backdrop-filter: blur(6px);
-  transition: all 0.2s ease;
+  border: 3px solid rgba(255,255,255,0.5);
+  border-radius: 50%;
+  background: rgba(0,0,0,0.3);
 }
 
-/* デバイス選択ボタン：タブレット＆PC */
-#pc {
+.circle-ctrl {
   position: absolute;
-  top: 10px;
-  left: 110px;
-  z-index: 20;
-  padding: 6px 12px;
-  font-size: 14px;
   border: none;
-  border-radius: 6px;
-  background: rgba(255, 255, 255, 0.85);
-  color: #000;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
-  cursor: pointer;
-  backdrop-filter: blur(6px);
-  transition: all 0.2s ease;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.8);
+  cursor: move;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.3);
 }
 
-/* -----------------------------------------
-   06. three.js UI／コントローラー
-   （移動ボタン・スティックなど）
-   ----------------------------------------- */
-
-/* 丸いコントロールボタン（▲▼や速度など） */
 .control-button {
   position: absolute;
   width: 60px;
   height: 60px;
-  font-size: 24px;
   border: none;
-  border-radius: 30px;
-  background-color: rgba(255, 255, 255, 0.2);
-  color: white;
-  z-index: 20;
-  backdrop-filter: blur(4px);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-  transition: all 0.1s ease-in-out;
-  user-select: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  -webkit-tap-highlight-color: transparent;
-  -webkit-touch-callout: none;
-}
-
-/* 横長の情報表示用ボタン（小） */
-.control-square-button {
-  position: absolute;
-  width: 400px;
-  height: 40px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.9);
   font-size: 24px;
-  border: none;
-  border-radius: 4px;
-  background-color: rgba(255, 255, 255, 0.2);
-  color: white;
-  z-index: 20;
-  backdrop-filter: blur(4px);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-  transition: all 0.1s ease-in-out;
-  user-select: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  -webkit-tap-highlight-color: transparent;
-  -webkit-touch-callout: none;
-}
-
-/* ログ表示などに使う大きめのパネル */
-.log-control-square-button {
-  position: absolute;
-  width: 800px;
-  height: 400px;
-  font-size: 24px;
-  border: none;
-  border-radius: 4px;
-  background-color: rgba(255, 255, 255, 0.2);
-  color: white;
-  z-index: 20;
-  backdrop-filter: blur(4px);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-  transition: all 0.1s ease-in-out;
-  user-select: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  -webkit-tap-highlight-color: transparent;
-  -webkit-touch-callout: none;
-}
-
-/* コントロールボタンのホバー・クリック時 */
-.control-button:hover {
-  filter: brightness(85%);
   cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+  transition: all 0.2s;
+}
+
+.control-button:hover {
+  background: white;
+  transform: scale(1.1);
 }
 
 .control-button:active {
-  filter: brightness(70%);
+  transform: scale(0.95);
 }
 
-/* 重ねて表示するアイコン用ラッパー */
-.icon-wrapper {
-  position: absolute;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 2em;
-  height: 2em;
-}
-
-/* 薄い背景アイコン */
-.background-icon {
-  position: absolute;
-  color: rgba(0, 0, 0, 0.5);
-  font-size: 1.5em;
-}
-
-/* 手前の濃いアイコン */
-.foreground-icon {
-  position: absolute;
-  color: black;
-  font-size: 1.3em;
-}
-
-/* 左下の円形スティックの当たり判定エリア */
-.circle-ctrl-area {
-  position: absolute;
-  border-radius: 50%;
-  background: rgba(0, 0, 0, 0.5);
-  border: 2px solid #333;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  transform: translate(-50%, -50%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  user-select: none;
-  touch-action: none;
-  cursor: grab;
-  pointer-events: auto;
-}
-
-/* 実際に動かすスティック */
-.circle-ctrl {
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: rgba(0, 0, 0, 0.5);
-  border: 2px solid #fff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  transform: translate(-50%, -50%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  user-select: none;
-  touch-action: none;
-  cursor: grab;
-  pointer-events: auto;
-}
-
-/* UI ボタンをまとめるグループ（任意） */
-#UiGroup {
+/* カテゴリーボタングリッド */
+.category-grid {
   position: relative;
-  width: 10%;
-  height: 590px;
-  border: 1px solid rgba(221, 221, 221, 0.2);
+  z-index: 2;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 20px;
+  width: min(720px, 92vw);
+  margin: 20px auto 30px;
+  padding: 30px;
+  background: rgba(255,255,255,0.95);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
 }
 
-#UiGroup button {
-  position: absolute;
-  left: 0;
-  width: 72px;
-  height: 28px;
-}
-
-/* three.js 用クレジット表示（下部固定） */
-.credits-footer {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(255, 255, 255, 0.9);
-  padding: 6px 12px;
-  font-size: 12px;
-  text-align: center;
-  z-index: 20;
-  box-shadow: 0 -1px 6px rgba(0, 0, 0, 0.12);
-}
-
-.credits-footer a {
-  color: #0645ad;
-  text-decoration: underline;
-}
-
-/* -----------------------------------------
-   07. 「文化祭について」セクション (#about)
-   ----------------------------------------- */
-
-#about-text {
-  margin-top: 5px;
-  margin-left: 20px;
-  font-size: 15px;
-}
-
-/* -----------------------------------------
-   08. 出し物紹介セクション (#shop)
-   1年〜3年・部活・説明パネル
-   ----------------------------------------- */
-
-/* 学年やカテゴリ（ART / ATTRACTION など）の見出し */
-.shop-section {
-  margin-top: 30px;
-  margin-bottom: 5px;
-  font-size: 20px;
-}
-
-/* .inner{
-    display: flex;
-  flex-direction: column;
-  align-items: center;
-} */
-
-/* 出し物リスト全体 */
-.shop {
-  margin-left: 5px;
-  font-size: clamp(15px, 2vw, 20px);
-}
-
-/* 出し物エリアを上下分割する場合の上側（本文側） */
-.shop-area {
-  flex: 1;
-  overflow-y: auto;
-  padding: 10px;
-  background: #fff;
-}
-
-/* 1つ1つの出し物 */
-.item {
-  border-bottom: 1px solid #ccc;
+.category-btn {
+  width: 120px;
+  height: 80px;
+  border: 3px solid #667eea;
+  border-radius: 15px;
+  background: white;
+  font-size: 16px;
+  font-weight: bold;
+  color: #667eea;
   cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
-/* 出し物のラベル（クリックしやすいよう余白を広めに） */
+.category-btn:hover {
+  background: #667eea;
+  color: white;
+  transform: translateY(-5px);
+  box-shadow: 0 8px 12px rgba(0,0,0,0.2);
+}
+
+/* 出し物セクション */
+.shop-section {
+  background: white;
+  padding: 30px;
+  margin: 30px 0;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.shop-section > span:first-child {
+  font-size: 24px;
+  font-weight: bold;
+  color: #667eea;
+  display: block;
+  margin-bottom: 20px;
+}
+
+.item {
+  padding: 15px;
+  margin: 10px 0;
+  background: #f9f9f9;
+  border-left: 4px solid #667eea;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  position: relative;
+}
+
+.item:hover {
+  background: #f0f0ff;
+  transform: translateX(10px);
+  box-shadow: 0 4px 10px rgba(102, 126, 234, 0.2);
+}
+
+.item.active {
+  background: #e6edff;
+  border-left-width: 6px;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
 .item-label {
-  display: inline-block;
-  border: 10px solid transparent;
-  color: #0645ad;
+  font-size: 16px;
+  font-weight: bold;
 }
 
-/* 下部固定の説明パネル（※説明欄） */
-#desc-panel {
+/* 詳細ウィンドウ */
+.detail-window{
   position: fixed;
+  bottom: -100%;
   left: 0;
-  bottom: 0;
   width: 100%;
-  height: 35vh;
-  color: #ffffff;
-  background: rgba(0, 0, 0, 0.825);
-  border-top: 2px solid #f00;
-  box-sizing: border-box;
-  padding: 16px;
-  overflow: hidden;
-  z-index: 30;
+  max-height: 100dvh;
+  overflow: hidden;          /* 中身だけスクロールさせる */
+  transition: bottom 0.5s ease;
+  background: rgba(255,255,255,0.98);
+  border-radius: 20px 20px 0 0;
+  z-index: 1000;
 }
 
-/* -----------------------------------------
-   09. タイムスケジュールセクション (#schedule)
-   ----------------------------------------- */
+.detail-window.show{
+  bottom: 0;
+}
 
+/* closeボタンは親基準で配置 */
+.close-btn{
+  position: absolute;        /* ← sticky をやめる */
+  top: 15px;
+  right: 20px;
+
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: #667eea;
+  color: white;
+  border-radius: 50%;
+  font-size: 20px;
+  cursor: pointer;
+  z-index: 10;
+}
+
+/* スクロールするのは中身だけ */
+#detail-content{
+  overflow-y: auto;
+  max-height: 100dvh;
+  padding: 60px 40px 40px;
+}
+
+.close-btn:hover {
+  background: #5568d3;
+  transform: rotate(90deg);
+}
+
+.detail-title {
+  white-space: normal;
+  word-break: break-word;
+
+  
+  color: #667eea;
+  margin-bottom: 20px;
+  border-bottom: 3px solid #667eea;
+  padding-bottom: 10px;
+}
+
+h2.detail-title{
+  display: block;
+  width: 100%;
+  min-width: 0;              /* flex内で折れない問題の対策 */
+
+  white-space: normal;
+  overflow-wrap: anywhere;   /* 長い文字でも折れる */
+  word-break: break-word;
+
+  font-size: clamp(0px,5vw, 22px);
+  color: #667eea;
+  margin: 0 0 20px;
+  border-bottom: 3px solid #667eea;
+  padding-bottom: 10px;
+}
+
+.detail-info {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 15px 20px;
+  margin: 20px 0;
+  font-size: 16px;
+}
+
+.detail-label {
+  font-weight: bold;
+  color: #667eea;
+}
+
+.detail-description {
+  margin: 20px 0;
+  line-height: 1.8;
+  font-size: 16px;
+  color: #333;
+}
+
+.detail-image {
+  width: 100%;
+  max-width: 600px;
+  height: 300px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 10px;
+  margin: 20px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 24px;
+}
+
+.detail-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+  display: block;
+}
+
+/* スケジュール */
 .schedule-section {
-  margin-left: 20px;
-  margin-top: 10px;
-  margin-bottom: 5px;
-  font-size: 18px;
+  background: white;
+  padding: 30px;
+  margin: 20px 0;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  font-size: 20px;
+  font-weight: bold;
+  color: #667eea;
 }
 
 .time {
-  margin-left: 40px;
-  font-size: 15px;
+  margin-top: 15px;
+  padding-left: 20px;
+  font-size: 16px;
+  font-weight: normal;
+  color: #333;
+  line-height: 2;
 }
 
-/* -----------------------------------------
-   10. アクセスセクション (#access)
-   ----------------------------------------- */
-
-.map {
-  font-size: clamp(10px, 100vw, 360px);
+/* アクセス */
+#map {
+  margin-top: 30px;
+  max-width: 1092px;
 }
 
-/* -----------------------------------------
-   11. フッター全体
-   （HTML の <footer class="section"> は
-     .section の共通スタイルをそのまま利用）
-   ----------------------------------------- */
-/* 特別なスタイルが必要になったら追加してください */
+#map iframe {
+  width: 100%;
+  height: 50vh;
+}
+
+/* .map {
+  text-align: center;
+  font-size: 100px;
+  padding: 40px;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+} */
+
+/* フッター */
+footer {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  text-align: center;
+  padding: 40px 20px;
+  margin-top: 60px;
+}
+
+footer .section-title {
+  color: white;
+}
+
+footer .section-title::after {
+  background: linear-gradient(90deg, transparent, white, transparent);
+}
+
+/* レスポンシブ */
+@media (max-width: 768px) {
+  .header-container {
+    flex-direction: column;
+    padding: 30px 20px;
+    gap: 30px;
+  }
+
+  .header-left {
+    width: 100%;
+  }
+
+  .fes-main {
+    font-size: 40px;
+  }
+
+  .fes-sub {
+    font-size: 32px;
+  }
+
+  .fes-year {
+    font-size: 32px;
+  }
+
+  .fes-shadow {
+    font-size: 40px;
+  }
+
+  .line-animation {
+    width: 300px;
+    height: 150px;
+    right: -80px;
+  }
+
+  .header-lines line,
+  .header-lines polyline {
+    display: block;
+  }
+
+  .header-right {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .date-box {
+    min-width: 80px;
+    padding: 10px 15px;
+  }
+
+  .date-large {
+    font-size: 36px;
+  }
+
+  .date-day {
+    font-size: 16px;
+  }
+
+  .blue-stripe {
+    width: 60px;
+  }
+
+  .category-grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 15px;
+    padding: 20px;
+  }
+
+  .category-btn {
+    width: 100px;
+    height: 70px;
+    font-size: 14px;
+  }
+
+  .section-title {
+    font-size: 24px;
+  }
+
+  .nav {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  #detail-content {
+    padding: 50px 20px 30px;
+  }
+
+  .detail-title {
+    font-size: 22px;
+  }
+
+  .detail-info {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}

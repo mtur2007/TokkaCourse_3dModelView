@@ -1,4 +1,4 @@
-// School3D.js : 3D空間を 構築/移動 する為のファイル
+// main.js
 
 import * as THREE from 'three';
 const scene = new THREE.Scene();
@@ -33,20 +33,16 @@ const shrinkBtn = document.getElementById('shrink-btn');
 // 昼夜切り替え
 const toggleBtn = document.getElementById("toggle-daynight");
 
-const banner = document.getElementById("banner");
-
 function enterFullscreen() {
-
-  banner.style.display = "none"
-
   section.classList.remove('banner');
   section.classList.add('fullscreen');
 
   // スクロールさせたくなければ封じる
   document.body.style.overflow = 'hidden';
 
-  expandBtn.hidden = true;
-  shrinkBtn.hidden = false;
+  expandBtn.hidden = false;
+  expandBtn.textContent = "拡小";
+  shrinkBtn.hidden = true;
 
   ctrlX = canvas.clientWidth*0.1
   ctrlY = canvas.clientHeight*0.8
@@ -57,15 +53,13 @@ function enterFullscreen() {
 }
 
 function exitFullscreen() {
-
-  banner.style.display = "block"
-
   section.classList.remove('fullscreen');
   section.classList.add('banner');
 
   document.body.style.overflow = '';
 
   expandBtn.hidden = false;
+  expandBtn.textContent = "拡大";
   shrinkBtn.hidden = true;
 
   ctrlX = canvas.clientWidth*0.1
@@ -76,13 +70,23 @@ function exitFullscreen() {
   updateSize();
 }
 
-expandBtn.addEventListener('click', enterFullscreen);
+expandBtn.addEventListener('click', () => {
+  if (section.classList.contains('fullscreen')) {
+    exitFullscreen();
+  } else {
+    enterFullscreen();
+  }
+});
 shrinkBtn.addEventListener('click', exitFullscreen);
 
 // タッチ操作用（必要なら）
 expandBtn.addEventListener('touchstart', (e) => {
   e.preventDefault();
-  enterFullscreen();
+  if (section.classList.contains('fullscreen')) {
+    exitFullscreen();
+  } else {
+    enterFullscreen();
+  }
 }, { passive: false });
 
 shrinkBtn.addEventListener('touchstart', (e) => {
@@ -248,6 +252,7 @@ const mouse = new THREE.Vector2();
 
 // マウスを動かしたときのイベント
 function handleMouseMove(x, y) {
+  // console.log('move')
   const element = canvas;
   // canvas要素上のXY座標
   const clientX = x - element.offsetLeft;
@@ -270,7 +275,7 @@ const handleTouchStart = async (e) => {
   
   // 視点
   await search_ctrl_num(e);
-  console.log('run');
+  
   if (e.changedTouches[0].identifier != ctrl_id && e.touches.length <= 2) {
     lastPosition1 = {
       x: e.touches[e.touches.length - 1].clientX,
@@ -281,7 +286,7 @@ const handleTouchStart = async (e) => {
   // --- 編集モード
   if (OperationMode === 0) { return; }
 
-  e.preventDefault();      // ← スクロールを止める
+  // e.preventDefault();      // ← スクロールを止める
 
   if (objectEditMode === 'MOVE_EXISTING') {
     dragging = null; // 'stand_by';
@@ -693,7 +698,7 @@ function animate() {
 
 // animate();
 
-export async function VewStart(){
+export async function school_VewStart(){
   
   await new Promise(resolve => setTimeout(resolve, 0));
 
@@ -706,18 +711,24 @@ export async function VewStart(){
   document.addEventListener('touchmove', handleTouchMove, { passive: false });
   document.addEventListener('touchend', handleTouchEnd);
 
+  lastPosition1 = {
+    x: mouse.x,
+    y: mouse.y
+  };
+
   enableKeyControl();  // ← キー入力とスクロール停止が有効になる
 
   if (isNight){toggleBtn.textContent = "☀️ 昼にする";}else{toggleBtn.textContent = "🌙 夜にする";}
   
-
+  updateSize();
+  renderer.render(scene, camera);
   animate()
 
 }
 
-export function VewStop(){
+export function school_VewStop(){
   run_STOP = true
-  
+
   window.removeEventListener('touchstart', handleTouchStart, { passive: false });
   document.removeEventListener('mousemove', handleDocumentMouseMove);
   document.removeEventListener('touchmove', handleTouchMove, { passive: false });

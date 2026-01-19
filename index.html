@@ -3,11 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>第一学院高等学校お茶の水校_文化祭 /「御茶ノ水フェス 2026 </title>
-	<link rel="stylesheet" href="CSS/destyle.css">
-	<link rel="stylesheet" href="CSS/style.css">
-  <link rel="stylesheet" href="CSS/effects.css">
+  <title>第一学院高等学校お茶の水校_文化祭 /「御茶ノ水フェス 2026」</title>
+  <link rel="stylesheet" href="CSS/destyle.css">
+  <link rel="stylesheet" href="CSS/style.css">
   <script type="importmap">
     {
       "imports": {
@@ -18,230 +16,345 @@
 </head>
 
 <body>
-
-  <!--ここにナビゲーション-->
-  <header>
-    <div id="top">
-      <div class="title">
-        <h1>第一学院高等学校お茶の水校</h1>
-        <h1 id="fes-name" class="fx-glow">「御茶ノ水フェス 2026」</h1>
+  <header id ="top">
+    <div class="header-container">
+      <div class="header-left">
+        <div class="fes-title">
+          <span class="fes-main">OCHANOMIZU</span>
+          <span class="fes-sub">FE<span class="fes-sub-s">S</span></span>
+          <span class="fes-year">202<span class="fes-year-6">6</span></span>
+        </div>
+        <div class="fes-shadow">
+          <span class="fes-shadow-main">OCHANOMIZU</span>
+          <span class="fes-shadow-sub">FE<span class="fes-shadow-sub-s">S</span></span>
+          <span class="fes-shadow-year">202<span class="fes-shadow-year-6">6</span></span>
+        </div>
       </div>
-      <div class="sub-title">
-        <h2>開催日 : 2026年9月 19日(土)・20日(日)</h2>
-        <h2>場所：第一学院高校 お茶の水キャンパス</h2>
+      <div class="header-right">
+        <div class="date-box">
+          <span class="date-large">9.19</span>
+          <span class="date-day">SAT</span>
+        </div>
+        <div class="date-box">
+          <span class="date-large">9.20</span>
+          <span class="date-day">SUN</span>
+        </div>
       </div>
+      <!-- 追加の装飾線 -->
+      <svg class="header-lines" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <polyline id="header-line-main" class="draw-line-arrow" pathLength="1" points="22.14,50 13.57,11.67 100,11.67" />
+        <polyline id="header-line-shadow" class="draw-line-arrow" pathLength="1" points="22.14,50 13.57,88.33 100,88.33" />
+      </svg>
     </div>
+    <div class="blue-stripe"></div>
+
+  <div id="category-grid" class="category-grid">
+    <a href="#food" class="category-btn">🍳 FOOD</a>
+    <a href="#art" class="category-btn">🎨 ART</a>
+    <a href="#attraction" class="category-btn">🎪 ATTRACTION</a>
+    <a href="#club" class="category-btn">🎭 CLUB</a>
+    <a href="#schedule" class="category-btn">⏰ TIME</a>
+    <a href="#access" class="category-btn">🗺️ MAP</a>
+  </div>
+
   </header>
 
-  <div id="banner" class="sticky-banner sparkle">
-    <ul class="nav">
-      <li><a href="#news">news</a></li>
-      <li><a href="#about">文化祭について</a></li>
-      <li><a href="#shop">出し物紹介</a></li>
-      <li><a href="#schedule">スケジュール</a></li>
-      <li><a href="#access">アクセス</a></li>
-  </ul>
+  <div id="banner">
+    <div class="nav-marquee">
+      <ul class="nav marquee-track">
+        <li><a href="#top">TOP</a></li>
+        <li><a href="#online">オンライン特設ゲーム</a></li>
+        <li><a href="#news">NEWS</a></li>
+        <li><a href="#about">文化祭について</a></li>
+        <li><a href="#shop">出し物紹介</a></li>
+        <li><a href="#schedule">スケジュール</a></li>
+        <li><a href="#access">アクセス</a></li>
+      </ul>
+      <ul class="nav marquee-track" aria-hidden="true">
+        <li><a href="#top">TOP</a></li>
+        <li><a href="#online">オンライン特設ゲーム</a></li>
+        <li><a href="#news">NEWS</a></li>
+        <li><a href="#about">文化祭について</a></li>
+        <li><a href="#shop">出し物紹介</a></li>
+        <li><a href="#schedule">スケジュール</a></li>
+        <li><a href="#access">アクセス</a></li>
+      </ul>
+    </div>
   </div>
-  <!--ここにメインイメージ-->
 
-  <!-- three.js を描画するエリア -->
-  <h2 id="imageText" class="section-title">【 ご使用のデバイスを選択 】</h2>
-  <section id="three-section">
-    <!-- <div id="three-container"> -->
+  <h2 id="online" class="section-title-noline">⸨オンライン特設ゲーム⸩</h2>
+  <div id="main-operation" class="section-subtitle">
+    アトラクションがテーマのゲームが体験できます！<br>
+    オンラインの皆さんも、ぜひ楽しんでください！
+    </div>
 
-      <canvas id="three-canvas"></canvas>
+    <div id="school-ctl" class="control-help">
+      <!-- <div>操作</div>
+      <div>💻: PC</div>
+      <div>📱: モバイル</div>
 
-      <!-- 右上に出す拡大ボタン -->
-      <button id="expand-btn" class="expand-btn" >🔍 拡大</button>
-      <button id="shrink-btn" class="expand-btn" hidden>✕ 閉じる</button>
-      
-      <button id="phone" class="left-btn">スマホの方</button>
-      <button id="pc" class="left-btn">タプレット&PCの方</button>
+      <div>移動</div>
+      <div>⌨️: AD/SW/QE</div>
+      <div>📱: 🔘 / 🔺 / 🔻</div>
 
-        <!-- 🌞 昼夜切り替えボタン -->
-      <button id="toggle-daynight" class="left-btn">🔴描画停止中.</button>
+      <div>速度</div>
+      <div>⌨️: 数字キー</div>
+      <div>📱: (◀︎◁)(▶︎▷)</div>
 
-        <!-- 左スティック（左下に表示） -->
-      <button id="controller-area" class="circle-ctrl-area" style="left: 160px; bottom: 60px; width: 80px; height: 80px"></button>
-      <button id="controller" class="circle-ctrl" style="left: 160px; bottom: 110px; width: 30px; height: 30px"></button>
+      <div>視点</div>
+      <div>⌨️: ← ↓ → ↑</div>
+      <div>📱: スライド</div> -->
 
-      <button id="speed-up" class="control-button" style="right: 20px; bottom: 200px;">◀︎◁</button>
-      <button id="speed-down" class="control-button" style="right: 95px; bottom: 200px;">▶︎▷</button>
-      <button id="btn-up" class="control-button" style="right: 160px; bottom: 150px;">🔺</button>
-      <button id="btn-down" class="control-button" style="right: 160px; bottom: 70px;">🔻</button>
+      <div>操作</div>
+      <div>💻: PC</div>
+      <div>📱: モバイル</div>
 
-    <!-- </div>   -->
+      <div>移動</div>
+      <div>⌨️: クリック</div>
+      <div>📱: タップ</div>
+
+      <div>視点</div>
+      <div>⌨️: ドラッグ</div>
+      <div>📱: スライド</div>
+
+      <div>拡大･拡小</div>
+      <div>⌨️: 2本指ドラッグ</div>
+      <div>📱: 同じ</div>
+
+    </div>
+
+    <div id="horror-ctl" class="control-help">
+      <div>操作</div>
+      <div>💻: PC</div>
+      <div>📱: モバイル</div>
+
+      <div>移動</div>
+      <div>⌨️: AD/SW</div>
+      <div>📱: 🔘 </div>
+
+      <div>視点</div>
+      <div>⌨️: ← ↓ → ↑</div>
+      <div>📱: スライド</div>
+    </div>
+    
+    <div id="ball-ctl" class="control-help">
+      <div>操作</div>
+      <div>💻: PC</div>
+      <div>📱: モバイル</div>
+
+      <div>ボールリセット</div>
+      <div>⌨️: R</div>
+      <div>📱: タップ</div>
+
+      <div>傾斜</div>
+      <div>⌨️: ドラッグ</div>
+      <div>📱: スライド</div>
+
+      <div>傾斜リセット</div>
+      <div>⌨️: クリック</div>
+      <div>📱: タップ</div>
+    </div>
+
+    <div class="game-operation">🔴重 ... タブレット or PC 推奨 <br>🟢軽 ... タブレット推奨 or スマホ(一部可能) <br>※修正が行き届いていません｡ご了承ください｡</div>
+  
+    <div class="game-select">
+      <button id="school" class="left-btn">🧭 学校探検 🏫 | 🟢軽</button>
+      <button id="ball" class="left-btn">🎾 ボール遊び 🥅 | 🔴重</button>
+      <button id="horror" class="left-btn">😈 お化け屋敷 👻 | 🟢軽</button>
+    </div>
+
+  <section id="three-section" class="section" >
+
+    <canvas id="three-canvas"></canvas>
+    <iframe
+      id="school-iframe"
+      src="https://www.google.com/maps/embed?pb=!4v1649656309050!6m8!1m7!1sCAoSLEFGMVFpcE51VVptTDdlanU4cWsyOVM0UG5CdlF3R3hscnliS1pQd0c1T1N1!2m2!1d35.903389348963!2d139.62746264326!3f334.6!4f-17.760000000000005!5f0.4000000000000002"
+      allowfullscreen=""
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade"
+    ></iframe>
+    
+    <button id="expand-btn" class="expand-btn" style="display: none;">🔍 拡大</button>
+    <button id="shrink-btn" class="expand-btn" hidden style="display: none;">✕ 閉じる</button>
+    
+    <button id="toggle-daynight" class="left-btn" style="display: none;">🔴描画停止中</button>
+
+    <button id="controller-area" class="circle-ctrl-area" style="display: none; left: 160px; bottom: 60px; width: 80px; height: 80px"></button>
+    <button id="controller" class="circle-ctrl" style="display: none; left: 160px; bottom: 110px; width: 30px; height: 30px"></button>
+    
+    <button id="speed-up" class="control-button" style="display: none; right: 20px; bottom: 200px;">◀︎◁</button>
+    <button id="speed-down" class="control-button" style="display: none; right: 95px; bottom: 200px;">▶︎▷</button>
+    <button id="btn-up" class="control-button" style="display: none; right: 160px; bottom: 150px;">🔺</button>
+    <button id="btn-down" class="control-button" style="display: none; right: 160px; bottom: 70px;">🔻</button>
+
   </section>
 
-  <section id="news" class="section" >
+  <section id="news" class="section">
     <h2 class="section-title">【お知らせ（News）】</h2>
-    お知らせ
-    お知らせ
-    お知らせ
+    <div class="shop-section">
+      <p>📢 <strong>2026年1月9日</strong> - サイトのデザインを大きく更新しました。</p>
+      <p>📢 <strong>2026年1月15日</strong> - お化け屋敷の  3Dゲームが仮設されました。</p>
+    </div>
   </section>
 
   <section id="about" class="section">
-    <div class="inner">
-      <h2 class="section-title">【文化祭について】</h2>
-      <div id="about-text">
-        ------------ <br>
-        ------------ <br>
-        ------------ <br>
-        ------------ <br>
-        ------------ <br>
-        ------------ <br>
-        ------------ <br>
-      </div> 
+    <h2 class="section-title">【文化祭について】</h2>
+    <div class="shop-section">
+      <p>第一学院高等学校お茶の水校の文化祭「御茶ノ水フェス 2026」へようこそ！</p>
+      <p>今年のテーマは<strong>「つながる、ひろがる、みらいへ」</strong>です。</p>
+      <br>
+      <p>生徒たちが一丸となって準備を進めてきた企画が盛りだくさん！</p>
+      <p>演劇、展示、アトラクション、模擬店、ライブパフォーマンスなど、</p>
+      <p>多彩なコンテンツで皆様をお迎えします。</p>
+      <br>
+      <p>ぜひご家族、ご友人をお誘い合わせの上、お越しください！</p>
     </div>
-    
   </section>
 
-  <!-- 出し物 -->
   <section id="shop" class="section">
+    <h2 class="section-title">【出し物紹介】</h2>
 
-    <div id="desc-panel">
-      <div id="descPanel">
-        ※説明欄
+    <div id="art" class="shop-section">
+      <span>🎨 ART - 1年生</span>
+      <div class="item" data-id="melos">
+        <span class="item-label">1-1 演劇「走れメロス 現代版」</span>
+        <p>友情と信頼を描いた現代アレンジ演劇。</p>
+      </div>
+      <div class="item" data-id="photo">
+        <span class="item-label">1-2 写真展「青春の記録」</span>
+        <p>青春をテーマにした写真展示企画です。</p>
+      </div>
+      <div class="item" data-id="sekai">
+        <span class="item-label">1-3 展示「世界の国を旅しよう！」</span>
+        <p>世界の文化や名物を紹介する展示。</p>
       </div>
     </div>
 
-    <h2 class="section-title">【出し物紹介】</h2>
-    <div class="underline"> </div>
-
-    <div class="inner">
-
-      <div class="shop-section"> 🎨ART 1年生
-        <div class="shop">
-          <div class="item" data-desc="友情と信頼を描いた現代アレンジ演劇。">
-            <span class="item-label">1-1 <span id="melos">演劇「走れメロス 現代版」</span></span>
-          </div>
-
-          <div class="item" data-desc="青春をテーマにした写真展示企画です。">
-            <span class="item-label">1-2 <span id="photo">写真展「青春の記録」</span></span>
-          </div>
-
-          <div class="item" data-desc="世界の文化や名物を紹介する展示。">
-            <span class="item-label">1-3 <span id="sekai">展示「世界の国を旅しよう！」</span></span>
-          </div>
-        </div>
+    <div id="attraction" class="shop-section">
+      <span>🎪 ATTRACTION - 2年生</span>
+      <div class="item" data-id="horror">
+        <span class="item-label">2-1 お化け屋敷</span>
+        <p>暗闇と恐怖が迫るスリリングな体験型施設。</p>
       </div>
-      
-      <div class="shop-section"> 🎪ATTRACTION 2年生
-        <div class="shop">
-          <div class="item" data-desc="暗闇と恐怖が迫るスリリングな体験型施設。">
-            <span class="item-label">2-1 <span id="horror" class="fx-title fx-glow fx-outline fx-box fx-shake horror" >お化け屋敷</span></span>
-          </div>
-
-          <div class="item" data-desc="子どもから大人まで楽しめる昔ながらの縁日コーナー。">
-            <span class="item-label">2-2 <span id="ennichi">縁日（射的・輪投げ）</span></span>
-          </div>
-
-          <div class="item" data-desc="知力とチームワークで挑む参加型パズルアトラクション。">
-            <span class="item-label">2-3 <span id="escape">脱出ゲーム「お茶の水迷宮」</span></span>
-          </div>
-        </div>
+      <div class="item" data-id="ennichi">
+        <span class="item-label">2-2 縁日（射的・輪投げ）</span>
+        <p>子どもから大人まで楽しめる昔ながらの縁日コーナー。</p>
       </div>
-
-      <div class="shop-section"> 🍳FOOD 3年生
-        <div class="shop">
-          <div class="item" data-desc="ほっと一息つける落ち着いた雰囲気の憩いスペース。">
-            <span class="item-label">3-1 <span id="cafe">カフェ「3-1 Cafe Yoda」</span></span>
-          </div>
-
-          <div class="item" data-desc="お祭り気分を味わえる定番メニューが勢揃い！">
-            <span class="item-label">3-2 <span id="takoyaki">模擬店「たこ焼き&焼きそば屋台」</span></span>
-          </div>
-
-          <div class="item" data-desc="こだわりソースで仕上げる人気の軽食ブース。">
-            <span class="item-label">3-3 <span id="omurice">模擬店｢オムライス&ホットドッグ｣</span></span>
-          </div>
-        </div>
+      <div class="item" data-id="escape">
+        <span class="item-label">2-3 脱出ゲーム「お茶の水迷宮」</span>
+        <p>知力とチームワークで挑む参加型パズルアトラクション。</p>
       </div>
+    </div>
 
-      <div class="shop-section"> CULB 部活
-        <div class="shop">
-          <div class="item" data-desc="迫力と感動を届ける吹奏楽の生演奏ステージ。（体育館）">
-            <span class="item-label"><span id="concert">吹奏楽部：ミニコンサート</span></span>
-          </div>
-
-          <div class="item" data-desc="個性と熱気あふれるバンドパフォーマンス。（ピロティ特設ステージ）">
-            <span class="item-label"><span id="band">軽音部：バンドライブ</span></span>
-          </div>
-
-          <div class="item" data-desc="日本文化の魅力を味わえる体験型茶席。（茶道室）">
-            <span class="item-label"><span id="chado">茶道部：お茶席・お点前体験</span></span>
-          </div>
-
-          <div class="item" data-desc="部員たちの力作が並ぶアートギャラリー。（美術室）">
-            <span class="item-label"><span id="art">美術部：作品展示</span></span>
-          </div>
-
-          <div class="item" data-desc="息の合ったダンスで会場を盛り上げるショー。（ピロティ特設ステージ）">
-            <span class="item-label"><span id="dance">ダンス部：ダンスショー</span></span>
-          </div>
-
-          <div class="item" data-desc="オリジナル3DゲームとこのHPを制作技術で展示。">
-            <span class="item-label"><span id="computer">パソコン部：このサイトと3Dゲーム</span></span>
-          </div>
-        </div>
+    <div id="food" class="shop-section">
+      <span>🍳 FOOD - 3年生</span>
+      <div class="item" data-id="cafe">
+        <span class="item-label">3-1 カフェ「3-1 Cafe Yoda」</span>
+        <p>ほっと一息つける落ち着いた雰囲気の憩いスペース。</p>
       </div>
+      <div class="item" data-id="takoyaki">
+        <span class="item-label">3-2 模擬店「たこ焼き&焼きそば屋台」</span>
+        <p>お祭り気分を味わえる定番メニューが勢揃い！</p>
+      </div>
+      <div class="item" data-id="omurice">
+        <span class="item-label">3-3 模擬店「オムライス&ホットドッグ」</span>
+        <p>こだわりソースで仕上げる人気の軽食ブース。</p>
+      </div>
+    </div>
 
+    <div id="club" class="shop-section">
+      <span>🎭 CLUB - 部活</span>
+      <div class="item" data-id="concert">
+        <span class="item-label">吹奏楽部：ミニコンサート</span>
+        <p>迫力と感動を届ける吹奏楽の生演奏ステージ。（体育館）</p>
+      </div>
+      <div class="item" data-id="band">
+        <span class="item-label">軽音部：バンドライブ</span>
+        <p>個性と熱気あふれるバンドパフォーマンス。（ピロティ特設ステージ）</p>
+      </div>
+      <div class="item" data-id="chado">
+        <span class="item-label">茶道部：お茶席・お点前体験</span>
+        <p>日本文化の魅力を味わえる体験型茶席。（茶道室）</p>
+      </div>
+      <div class="item" data-id="art">
+        <span class="item-label">美術部：作品展示</span>
+        <p>部員たちの力作が並ぶアートギャラリー。（美術室）</p>
+      </div>
+      <div class="item" data-id="dance">
+        <span class="item-label">ダンス部：ダンスショー</span>
+        <p>息の合ったダンスで会場を盛り上げるショー。（ピロティ特設ステージ）</p>
+      </div>
+      <div class="item" data-id="computer">
+        <span class="item-label">パソコン部：このサイトと3Dゲーム</span>
+        <p>オリジナル3DゲームとこのHPを制作技術で展示。</p>
+      </div>
     </div>
   </section>
 
-  <!-- プロフィール -->
   <section id="schedule" class="section">
     <h2 class="section-title">【タイムスケジュール】</h2>
-    <div>
-      <p class="schedule-section">DAY1 9/19（土）
-        <p class="time">
-          10:00 開場<br>
-          10:30 開会式（ホール・在校生）<br>
-          11:00 吹奏楽部 ミニコンサート<br>
-          12:00 各模擬店オープン<br>
-          14:00 軽音部 ライブ①<br>
-          15:00 ダンス部ステージ①<br>
-          16:00 閉場
-        </p>      
+    
+    <div class="schedule-section">
+      DAY1 9/19（土）
+      <p class="time">
+        10:00 開場<br>
+        10:30 開会式（ホール・在校生）<br>
+        11:00 吹奏楽部 ミニコンサート<br>
+        12:00 各模擬店オープン<br>
+        14:00 軽音部 ライブ①<br>
+        15:00 ダンス部ステージ①<br>
+        16:00 閉場
       </p>
     </div>
 
-    <div>
-      <p class="schedule-section">DAY2 9/20（日
-        <p class="time">
-          10:00 開場<br>
-          11:00 軽音部 ライブ②<br>
-          12:00 各模擬店オープン<br>
-          13:00 ダンス部ステージ②<br>
-          15:00 閉場<br>
-          16:00 閉会式（ホール・在校生）
-        </p>
+    <div class="schedule-section">
+      DAY2 9/20（日）
+      <p class="time">
+        10:00 開場<br>
+        11:00 軽音部 ライブ②<br>
+        12:00 各模擬店オープン<br>
+        13:00 ダンス部ステージ②<br>
+        15:00 閉場<br>
+        16:00 閉会式（ホール・在校生）
       </p>
     </div>
-
-    <!-- <div> <img src="images/thum00.jpg" alt="プロフィール画像"> </div> -->
   </section>
-  <!-- photo -->
-  
+
   <section id="access" class="section">
     <h2 class="section-title">【アクセス】</h2>
-    地図画像 + 住所
-    <p class="map">
-      🗺️
-    </p>
+    <div class="shop-section">
+      <h3>📍 第一学院高等学校 お茶の水キャンパス</h3>
+      <p>〒101-0062 東京都千代田区神田駿河台____</p>
+      <p>📞 TEL: ___-____-____</p>
+      <br>
+      <p><strong>電車でお越しの方：</strong></p>
+      <p>・JR中央線・総武線「御茶ノ水駅」より徒歩3分</p>
+      <p>・東京メトロ丸ノ内線「御茶ノ水駅」より徒歩5分</p>
+      <p>・東京メトロ千代田線「新御茶ノ水駅」より徒歩7分</p>
+
+      <p id="map" class="map">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3240.1269948080117!2d139.7642872760759!3d35.69849237258171!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x60188c1b96c00001%3A0xc9d2d9204ed5ba1c!2z5b6h6Iy244OO5rC044K944Op44K344OG44Kj!5e0!3m2!1sja!2sjp!4v1768491986770!5m2!1sja!2sjp" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </p>
+
+    </div>
+
   </section>
-</main>
 
-<footer class="section">
-  <h2 class="section-title">【概要】</h2>
-  学校サイト : https://www.daiichigakuin.ed.jp/ <br>
-  SNS : ________ <br>
-  企画 : 👥 文化祭運営委員会 <br>
-  制作 : 💻 パソコン部 <br>
-  <samall>&copy; 2025 your name inc.</samall>
-</footer>
+  <!-- 詳細ウィンドウ -->
+  <div id="detail-window" class="detail-window">
+    <button id="close-detail" class="close-btn">✕</button>
+    <div id="detail-content"></div>
+  </div>
 
-<script type="module" src="js/main.js"></script>
+  <footer>
+    <h2 class="section-title">【概要】</h2>
+    <p>学校サイト : https://www.daiichigakuin.ed.jp/</p>
+    <p>企画 : 👥 文化祭運営委員会</p>
+    <p>制作 : 💻 パソコン部</p>
+    <br>
+    <small>&copy; 2026 第一学院高等学校お茶の水校</small>
+  </footer>
 
+  <script type="module" src="JS/main.js"></script>
 </body>
 </html>

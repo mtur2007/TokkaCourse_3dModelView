@@ -1,14 +1,5 @@
-// ui_toggle.js : ボタン上下(階層)関係による on・off 効力範囲の定義を ツリー管理により単純化するファイル
-// ( html/JavaScript のトグル管理用コードを生成するファイル ) [現在,未使用]
-
+// インデックス検索コード
 import { UIevent } from './main.js';
-
-const uiTree = {
-    'map':'',
-    'games':{
-        'labyrinth_ball':''
-    }
-}
 
 function toggleProcessing(uiIDs,next_nest){
     
@@ -143,6 +134,17 @@ function connectionUI(uiTree){
         UIs.Allkeys[i] = document.getElementById(Allkeys[i]);
     }
     return UIs.Allkeys
+}
+
+
+
+const update = {'new':'', 'move':{'x_z':'', 'y':''}}
+// update = 'id_update'
+const uiTree = {
+    'map':'',
+    'games':{
+        'labyrinth_ball':''
+    }
 }
 
 console.log(GenerateDefinitionCode(uiTree)[0])
