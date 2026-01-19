@@ -443,6 +443,28 @@ header {
   }
 }
 
+@keyframes infoSlideFade {
+  0% {
+    opacity: 0;
+    transform: translateX(-22px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes circleFadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(14px) scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 .nav {
   display: flex;
   justify-content: center;
@@ -729,25 +751,89 @@ header {
   box-shadow: 0 10px 30px rgba(0,0,0,0.3);
 }
 
+.category-heading {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  width: min(720px, 92vw);
+  margin: 35px auto 0;
+  padding: 0 10px;
+  font-family: "impact", sans-serif;
+  font-size: clamp(28px, 4.4vw, 44px);
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  animation: infoSlideFade 0.9s ease both;
+}
+
+.category-heading img {
+  width: 135px;
+  height: 135px;
+  object-fit: contain;
+}
+
 .category-btn {
-  width: 120px;
-  height: 80px;
-  border: 3px solid #667eea;
-  border-radius: 15px;
-  background: white;
+  width: 135px;
+  height: 135px;
+  border: 2px solid var(--accent);
+  border-radius: 50%;
+  background: linear-gradient(135deg, #fffaf3 0%, #f2efe8 100%);
   font-size: 16px;
   font-weight: bold;
-  color: #667eea;
+  color: var(--accent);
   cursor: pointer;
   transition: all 0.3s;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  box-shadow: var(--shadow-soft);
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  line-height: 1.2;
+  position: relative;
+  animation: circleFadeUp 0.8s ease both;
 }
 
 .category-btn:hover {
-  background: #667eea;
+  background: var(--accent);
   color: white;
   transform: translateY(-5px);
-  box-shadow: 0 8px 12px rgba(0,0,0,0.2);
+  box-shadow: var(--shadow);
+}
+
+.category-btn:nth-child(1) { animation-delay: 0.05s; }
+.category-btn:nth-child(2) { animation-delay: 0.12s; }
+.category-btn:nth-child(3) { animation-delay: 0.19s; }
+.category-btn:nth-child(4) { animation-delay: 0.26s; }
+.category-btn:nth-child(5) { animation-delay: 0.33s; }
+.category-btn:nth-child(6) { animation-delay: 0.4s; }
+
+.category-icon {
+  width: 90%;
+  height: 90%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.category-btn img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: inline-block;
+}
+
+.category-label {
+  font-size: 15px;
+  letter-spacing: 0.04em;
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
 }
 
 /* 出し物セクション */
@@ -765,6 +851,15 @@ header {
   color: #667eea;
   display: block;
   margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.shop-section > span:first-child img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
 }
 
 .item {
@@ -776,6 +871,10 @@ header {
   cursor: pointer;
   transition: all 0.3s;
   position: relative;
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  column-gap: 12px;
+  align-items: center;
 }
 
 .item:hover {
@@ -793,6 +892,31 @@ header {
 .item-label {
   font-size: 16px;
   font-weight: bold;
+  grid-column: 2;
+}
+
+.item p {
+  grid-column: 2;
+  margin-top: 4px;
+}
+
+.item-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(15, 138, 138, 0.12);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  grid-row: span 2;
+  overflow: hidden;
+}
+
+.item-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.08);
 }
 
 /* 詳細ウィンドウ */
@@ -1037,11 +1161,37 @@ footer .section-title::after {
     padding: 20px;
   }
 
+  .category-heading {
+    font-size: clamp(18px, 5vw, 24px);
+    margin-top: 0;
+  }
+
+  .category-heading img {
+    width: 110px;
+    height: 110px;
+  }
+
   .category-btn {
-    width: 100px;
-    height: 70px;
+    width: 110px;
+    height: 110px;
     font-size: 14px;
   }
+
+  .category-icon {
+    width: 88%;
+    height: 88%;
+  }
+
+  .category-btn img {
+    width: 100%;
+    height: 100%;
+  }
+
+  .category-label {
+    font-size: 13px;
+    bottom: 10px;
+  }
+
 
   .section-title {
     font-size: 24px;

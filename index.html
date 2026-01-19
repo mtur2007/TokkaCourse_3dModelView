@@ -30,7 +30,7 @@
           <span class="fes-shadow-year">202<span class="fes-shadow-year-6">6</span></span>
         </div>
       </div>
-      <div class="header-right">
+      <!-- <div class="header-right">
         <div class="date-box">
           <span class="date-large">9.19</span>
           <span class="date-day">SAT</span>
@@ -39,7 +39,7 @@
           <span class="date-large">9.20</span>
           <span class="date-day">SUN</span>
         </div>
-      </div>
+      </div> -->
       <!-- 追加の装飾線 -->
       <svg class="header-lines" viewBox="0 0 100 100" preserveAspectRatio="none">
         <polyline id="header-line-main" class="draw-line-arrow" pathLength="1" points="22.14,50 13.57,11.67 100,11.67" />
@@ -48,13 +48,18 @@
     </div>
     <div class="blue-stripe"></div>
 
+  <div class="category-heading">
+    <img src="icon/information.png" alt="" aria-hidden="true">
+    <span>INFORMATION</span>
+  </div>
+
   <div id="category-grid" class="category-grid">
-    <a href="#food" class="category-btn">🍳 FOOD</a>
-    <a href="#art" class="category-btn">🎨 ART</a>
-    <a href="#attraction" class="category-btn">🎪 ATTRACTION</a>
-    <a href="#club" class="category-btn">🎭 CLUB</a>
-    <a href="#schedule" class="category-btn">⏰ TIME</a>
-    <a href="#access" class="category-btn">🗺️ MAP</a>
+    <a href="#food" class="category-btn" aria-label="FOOD"><span class="category-icon"><img src="icon/food.png" alt=""></span></a>
+    <a href="#art" class="category-btn" aria-label="ART"><span class="category-icon"><img src="icon/art.png" alt=""></span></a>
+    <a href="#attraction" class="category-btn" aria-label="ATTRACTION"><span class="category-icon"><img src="icon/attraction.png" alt=""></span></a>
+    <a href="#club" class="category-btn" aria-label="CLUB"><span class="category-icon"><img src="icon/club.png" alt=""></span></a>
+    <a href="#schedule" class="category-btn" aria-label="TIME"><span class="category-icon"><img src="icon/time.png" alt=""></span></a>
+    <a href="#access" class="category-btn" aria-label="MAP"><span class="category-icon"><img src="icon/map.png" alt=""></span></a>
   </div>
 
   </header>
@@ -215,76 +220,91 @@
     <h2 class="section-title">【出し物紹介】</h2>
 
     <div id="art" class="shop-section">
-      <span>🎨 ART - 1年生</span>
+      <span><img src="icon/art.png" alt="">ART - 1年生</span>
       <div class="item" data-id="melos">
+        <span class="item-icon"><img src="shop-icon/melos.png" alt=""></span>
         <span class="item-label">1-1 演劇「走れメロス 現代版」</span>
         <p>友情と信頼を描いた現代アレンジ演劇。</p>
       </div>
       <div class="item" data-id="photo">
+        <span class="item-icon"><img src="shop-icon/photo.png" alt=""></span>
         <span class="item-label">1-2 写真展「青春の記録」</span>
         <p>青春をテーマにした写真展示企画です。</p>
       </div>
       <div class="item" data-id="sekai">
+        <span class="item-icon"><img src="shop-icon/sekai.png" alt=""></span>
         <span class="item-label">1-3 展示「世界の国を旅しよう！」</span>
         <p>世界の文化や名物を紹介する展示。</p>
       </div>
     </div>
 
     <div id="attraction" class="shop-section">
-      <span>🎪 ATTRACTION - 2年生</span>
+      <span><img src="icon/attraction.png" alt="">ATTRACTION - 2年生</span>
       <div class="item" data-id="horror">
+        <span class="item-icon"><img src="shop-icon/horror.png" alt=""></span>
         <span class="item-label">2-1 お化け屋敷</span>
         <p>暗闇と恐怖が迫るスリリングな体験型施設。</p>
       </div>
       <div class="item" data-id="ennichi">
+        <span class="item-icon"><img src="shop-icon/ennichi.png" alt=""></span>
         <span class="item-label">2-2 縁日（射的・輪投げ）</span>
         <p>子どもから大人まで楽しめる昔ながらの縁日コーナー。</p>
       </div>
       <div class="item" data-id="escape">
+        <span class="item-icon"><img src="shop-icon/escape.png" alt=""></span>
         <span class="item-label">2-3 脱出ゲーム「お茶の水迷宮」</span>
         <p>知力とチームワークで挑む参加型パズルアトラクション。</p>
       </div>
     </div>
 
     <div id="food" class="shop-section">
-      <span>🍳 FOOD - 3年生</span>
+      <span><img src="icon/food.png" alt="">FOOD - 3年生</span>
       <div class="item" data-id="cafe">
+        <span class="item-icon"><img src="shop-icon/cafe.png" alt=""></span>
         <span class="item-label">3-1 カフェ「3-1 Cafe Yoda」</span>
         <p>ほっと一息つける落ち着いた雰囲気の憩いスペース。</p>
       </div>
       <div class="item" data-id="takoyaki">
+        <span class="item-icon"><img src="image/takoyakisoba.webp" alt=""></span>
         <span class="item-label">3-2 模擬店「たこ焼き&焼きそば屋台」</span>
         <p>お祭り気分を味わえる定番メニューが勢揃い！</p>
       </div>
       <div class="item" data-id="omurice">
+        <span class="item-icon"><img src="shop-icon/omurice.png" alt=""></span>
         <span class="item-label">3-3 模擬店「オムライス&ホットドッグ」</span>
         <p>こだわりソースで仕上げる人気の軽食ブース。</p>
       </div>
     </div>
 
     <div id="club" class="shop-section">
-      <span>🎭 CLUB - 部活</span>
+      <span><img src="icon/club.png" alt="">CLUB - 部活</span>
       <div class="item" data-id="concert">
+        <span class="item-icon"><img src="shop-icon/concert.png" alt=""></span>
         <span class="item-label">吹奏楽部：ミニコンサート</span>
         <p>迫力と感動を届ける吹奏楽の生演奏ステージ。（体育館）</p>
       </div>
       <div class="item" data-id="band">
+        <span class="item-icon"><img src="shop-icon/band.png" alt=""></span>
         <span class="item-label">軽音部：バンドライブ</span>
         <p>個性と熱気あふれるバンドパフォーマンス。（ピロティ特設ステージ）</p>
       </div>
       <div class="item" data-id="chado">
+        <span class="item-icon"><img src="shop-icon/chado.png" alt=""></span>
         <span class="item-label">茶道部：お茶席・お点前体験</span>
         <p>日本文化の魅力を味わえる体験型茶席。（茶道室）</p>
       </div>
       <div class="item" data-id="art">
+        <span class="item-icon"><img src="shop-icon/art.png" alt=""></span>
         <span class="item-label">美術部：作品展示</span>
         <p>部員たちの力作が並ぶアートギャラリー。（美術室）</p>
       </div>
       <div class="item" data-id="dance">
+        <span class="item-icon"><img src="shop-icon/dance.png" alt=""></span>
         <span class="item-label">ダンス部：ダンスショー</span>
         <p>息の合ったダンスで会場を盛り上げるショー。（ピロティ特設ステージ）</p>
       </div>
       <div class="item" data-id="computer">
+        <span class="item-icon"><img src="shop-icon/computer.png" alt=""></span>
         <span class="item-label">パソコン部：このサイトと3Dゲーム</span>
         <p>オリジナル3DゲームとこのHPを制作技術で展示。</p>
       </div>
