@@ -3,9 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>第一学院高等学校お茶の水校_文化祭 /「御茶ノ水フェス 2026」</title>
   <link rel="stylesheet" href="CSS/destyle.css">
   <link rel="stylesheet" href="CSS/style.css">
+  <link rel="stylesheet" href="CSS/header.css">
   <script type="importmap">
     {
       "imports": {
@@ -16,21 +18,28 @@
 </head>
 
 <body>
-  <header id ="top">
+
+  
+  <header id="top">
+    .
+    <!-- ヘッダータイトル＋日付＋SVGライン -->
     <div class="header-container">
       <div class="header-left">
+        <!-- メインタイトル文字 -->
         <div class="fes-title">
           <span class="fes-main">OCHANOMIZU</span>
-          <span class="fes-sub">FE<span class="fes-sub-s">S</span></span>
-          <span class="fes-year">202<span class="fes-year-6">6</span></span>
+          <span class="fes-sub">FES</span>
+          <span class="fes-year">2026</span>
         </div>
+        <!-- 反転した影文字 -->
         <div class="fes-shadow">
           <span class="fes-shadow-main">OCHANOMIZU</span>
-          <span class="fes-shadow-sub">FE<span class="fes-shadow-sub-s">S</span></span>
-          <span class="fes-shadow-year">202<span class="fes-shadow-year-6">6</span></span>
+          <span class="fes-shadow-sub">FES</span>
+          <span class="fes-shadow-year">2026</span>
         </div>
       </div>
-      <!-- <div class="header-right">
+      <div class="header-right">
+        <!-- 日付ボックス -->
         <div class="date-box">
           <span class="date-large">9.19</span>
           <span class="date-day">SAT</span>
@@ -39,29 +48,31 @@
           <span class="date-large">9.20</span>
           <span class="date-day">SUN</span>
         </div>
-      </div> -->
-      <!-- 追加の装飾線 -->
+      </div>
+      <!-- 描画されるSVGライン -->
       <svg class="header-lines" viewBox="0 0 100 100" preserveAspectRatio="none">
         <polyline id="header-line-main" class="draw-line-arrow" pathLength="1" points="22.14,50 13.57,11.67 100,11.67" />
         <polyline id="header-line-shadow" class="draw-line-arrow" pathLength="1" points="22.14,50 13.57,88.33 100,88.33" />
       </svg>
     </div>
+    <!-- 伸びる縦ストライプ -->
     <div class="blue-stripe"></div>
 
-  <div class="category-heading">
-    <img src="icon/information.png" alt="" aria-hidden="true">
-    <span>INFORMATION</span>
-  </div>
+    <!-- イントロ後に出るカテゴリ見出し -->
+    <div class="category-heading">
+      <img src="icon/information.png" alt="" aria-hidden="true">
+      <span>INFORMATION</span>
+    </div>
 
-  <div id="category-grid" class="category-grid">
-    <a href="#food" class="category-btn" aria-label="FOOD"><span class="category-icon"><img src="icon/food.png" alt=""></span></a>
-    <a href="#art" class="category-btn" aria-label="ART"><span class="category-icon"><img src="icon/art.png" alt=""></span></a>
-    <a href="#attraction" class="category-btn" aria-label="ATTRACTION"><span class="category-icon"><img src="icon/attraction.png" alt=""></span></a>
-    <a href="#club" class="category-btn" aria-label="CLUB"><span class="category-icon"><img src="icon/club.png" alt=""></span></a>
-    <a href="#schedule" class="category-btn" aria-label="TIME"><span class="category-icon"><img src="icon/time.png" alt=""></span></a>
-    <a href="#access" class="category-btn" aria-label="MAP"><span class="category-icon"><img src="icon/map.png" alt=""></span></a>
-  </div>
-
+    <!-- イントロ後に出るカテゴリボタン -->
+    <div id="category-grid" class="category-grid">
+      <a href="#food" class="category-btn" aria-label="FOOD"><span class="category-icon"><img src="icon/food.png" alt=""></span></a>
+      <a href="#art" class="category-btn" aria-label="ART"><span class="category-icon"><img src="icon/art.png" alt=""></span></a>
+      <a href="#attraction" class="category-btn" aria-label="ATTRACTION"><span class="category-icon"><img src="icon/attraction.png" alt=""></span></a>
+      <a href="#club" class="category-btn" aria-label="CLUB"><span class="category-icon"><img src="icon/club.png" alt=""></span></a>
+      <a href="#schedule" class="category-btn" aria-label="TIME"><span class="category-icon"><img src="icon/time.png" alt=""></span></a>
+      <a href="#access" class="category-btn" aria-label="MAP"><span class="category-icon"><img src="icon/map.png" alt=""></span></a>
+    </div>
   </header>
 
   <div id="banner">
@@ -160,14 +171,6 @@
       <div>📱: タップ</div>
     </div>
 
-    <div class="game-operation">🔴重 ... タブレット or PC 推奨 <br>🟢軽 ... タブレット推奨 or スマホ(一部可能) <br>※修正が行き届いていません｡ご了承ください｡</div>
-  
-    <div class="game-select">
-      <button id="school" class="left-btn">🧭 学校探検 🏫 | 🟢軽</button>
-      <button id="ball" class="left-btn">🎾 ボール遊び 🥅 | 🔴重</button>
-      <button id="horror" class="left-btn">😈 お化け屋敷 👻 | 🟢軽</button>
-    </div>
-
   <section id="three-section" class="section" >
 
     <canvas id="three-canvas"></canvas>
@@ -193,7 +196,15 @@
     <button id="btn-down" class="control-button" style="display: none; right: 160px; bottom: 70px;">🔻</button>
 
   </section>
+  
+  <div class="game-select">
+    <button id="school" class="left-btn">🧭 学校探検 🏫 | 🟢軽</button>
+    <button id="ball" class="left-btn">🎾 ボール遊び 🥅 | 🔴重</button>
+    <button id="horror" class="left-btn">😈 お化け屋敷 👻 | 🟢軽</button>
+  </div>
 
+  <div class="game-operation">🔴重 ... タブレット or PC 推奨 <br>🟢軽 ... タブレット推奨 or スマホ(一部可能) <br>※修正が行き届いていません｡ご了承ください｡</div>
+  
   <section id="news" class="section">
     <h2 class="section-title">【お知らせ（News）】</h2>
     <div class="shop-section">
@@ -374,7 +385,11 @@
     <br>
     <small>&copy; 2026 第一学院高等学校お茶の水校</small>
   </footer>
-
+  <main class="demo-note">
+    <h1>Header Animation Demo</h1>
+    <p>このページはヘッダーのアニメーション学習用です。</p>
+  </main>
   <script type="module" src="js/main.js"></script>
+  <script type="module" src="js/header.js"></script>
 </body>
 </html>

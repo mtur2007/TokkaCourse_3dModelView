@@ -1,0 +1,486 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ヘッダー全体で使う色と影の変数。 */
+:root {
+  --accent: #445ba0;
+  --shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
+  --shadow-soft: 0 8px 18px rgba(0, 0, 0, 0.18);
+}
+
+/* デモページのベース設定。 */
+body {
+  font-family: Arial, "Hiragino Sans", Meiryo, sans-serif;
+  background: #f5f5f5;
+  line-height: 1.6;
+  color: #231815;
+}
+
+/* ヘッダー外枠の見た目。 */
+header {
+  font-family: "Impact", sans-serif;
+  background: white;
+  position: relative;
+  z-index: 50;
+  overflow: hidden;
+  padding: 0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* タイトルと日付を並べるメインレイアウト。 */
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: clamp(8px, 0.7vw, 16px);
+  position: relative;
+  max-width: 1040px;
+  margin: 0 auto;
+  --header-intro-offset: 0px;
+}
+
+.header-left {
+  position: relative;
+  z-index: 2;
+}
+
+/* タイトル文字を縦に並べる。 */
+.fes-title {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  z-index: 2;
+}
+
+/* タイトル1行目のアニメタイミング。 */
+.fes-main {
+  animation: fesFeedIn 1.2s ease-out forwards;
+  animation-delay: 0.1s;
+}
+
+/* タイトル2行目のアニメタイミング。 */
+.fes-sub {
+  animation: fesFeedIn 1.6s ease-out forwards;
+  animation-delay: 0.01s;
+}
+
+/* タイトル3行目のアニメタイミング。 */
+.fes-year {
+  animation: fesFeedIn 2s ease-out forwards;
+  animation-delay: 0.01s;
+   z-index: 2;
+}
+
+.fes-main,
+.fes-sub,
+.fes-year {
+  font-size: clamp(32px, 4.6vw, 64px);
+  color: #231815;
+  letter-spacing: 1px;
+  line-height: 0.9;
+}
+
+/* 反転した影文字ブロック。 */
+.fes-shadow {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-top: clamp(-40px, -2.1vw, -20px);
+  transform: scaleY(-1);
+  position: relative;
+  z-index: 1;
+}
+
+/* 影文字1行目のアニメタイミング。 */
+.fes-shadow-main {
+  animation: fesFeedIn 1.2s ease-out forwards;
+  animation-delay: 0.01s;
+}
+
+/* 影文字2行目のアニメタイミング。 */
+.fes-shadow-sub {
+  animation: fesFeedIn 1.6s ease-out forwards;
+  animation-delay: 0.01s;
+}
+
+/* 影文字3行目のアニメタイミング。 */
+.fes-shadow-year {
+  animation: fesFeedIn 2s ease-out forwards;
+  animation-delay: 0.01s;
+}
+
+.fes-shadow-main,
+.fes-shadow-sub,
+.fes-shadow-year {
+  font-size: clamp(32px, 4.6vw, 64px);
+  color: #c3e6f9;
+  letter-spacing: 1px;
+  line-height: 0.9;
+}
+
+/* 左からスライドしつつ表示する。 */
+@keyframes fesFeedIn {
+  0% {
+    transform: translateX(-140%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fesFeedIn_line {
+  0% {
+    transform: translateX(-50%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* SVGラインの重ね表示。 */
+.header-lines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  animation: fesFeedIn_line 1.5s ease-out forwards;
+}
+
+/* 線が描かれるように見せる。 */
+.draw-line-arrow {
+  fill: none;
+  stroke: #445ba0;
+  stroke-width: 0.15vw;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: drawLine 2s ease-out forwards;
+  /* animation-delay: 0.5s; */
+}
+
+/* 日付ボックスの並び。 */
+.header-right {
+  display: flex;
+  gap: 1.4vw;
+  z-index: 2;
+}
+
+/* 日付ボックスのスライドイン。 */
+.date-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #efefef;
+  padding: clamp(10px, 1.1vw, 15px) clamp(14px, 1.5vw, 20px);
+  border-radius: 8px;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.55);
+  min-width: clamp(72px, 7.1vw, 100px);
+  animation: slideInRight 1s ease-out;
+  transition: transform 0.3s ease;
+  position: relative;
+}
+
+/* 日付ボックスの枠線描画アニメ。 */
+.date-box::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 3px solid #445ba0;
+  border-radius: 8px;
+  stroke-dasharray: 400;
+  stroke-dashoffset: 400;
+  animation: drawBoxBorder 1.5s ease-out forwards;
+  animation-delay: 1s;
+  opacity: 0;
+}
+
+.date-box:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.date-box:nth-child(2)::before {
+  animation-delay: 1.2s;
+}
+
+.date-large {
+  font-size: clamp(24px, 3.4vw, 48px);
+  font-weight: 900;
+  color: #2c3e50;
+  line-height: 1;
+}
+
+.date-day {
+  font-size: clamp(12px, 1.4vw, 20px);
+  font-weight: 700;
+  color: #555;
+  letter-spacing: 2px;
+}
+
+/* 青い縦線の幅が伸びる演出。 */
+.blue-stripe {
+  position: absolute;
+  right: calc(50% - 50vw);
+  top: 0;
+  bottom: 0;
+  width: clamp(36px, 5.7vw, 80px);
+  background: #445ba0;
+  animation: expandStripe 1.5s ease-out;
+  z-index: 1;
+}
+
+/* イントロ後に出るINFORMATION見出し。 */
+.category-heading {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  width: min(720px, 92vw);
+  margin: 35px auto 0;
+  padding: 0 10px;
+  font-size: clamp(28px, 4.4vw, 44px);
+  letter-spacing: 0.08em;
+  color: var(--accent);
+}
+
+.category-heading img {
+  width: 135px;
+  height: 135px;
+  object-fit: contain;
+}
+
+/* カテゴリボタンのグリッド配置。 */
+.category-grid {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 20px;
+  width: min(720px, 92vw);
+  background: rgba(255, 255, 255, 0.95);
+  margin: 20px auto 30px;
+  padding: 30px;
+  /* background: rgba(18, 21, 28, 0.96); */
+  border-radius: 20px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.6);
+}
+
+/* 円形ボタンの基本スタイル。 */
+.category-btn {
+  width: 135px;
+  height: 135px;
+  border: 2px solid var(--accent);
+  border-radius: 50%;
+  background: linear-gradient(135deg, #fffaf3 0%, #f2efe8 100%);
+  font-size: 16px;
+  font-weight: bold;
+  color: var(--accent);
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: var(--shadow-soft);
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  line-height: 1.2;
+  position: relative;
+}
+
+.category-btn:hover {
+  background: var(--accent);
+  color: white;
+  transform: translateY(-5px);
+  box-shadow: var(--shadow);
+}
+
+.category-btn:nth-child(1) { animation-delay: 0.05s; }
+.category-btn:nth-child(2) { animation-delay: 0.12s; }
+.category-btn:nth-child(3) { animation-delay: 0.19s; }
+.category-btn:nth-child(4) { animation-delay: 0.26s; }
+.category-btn:nth-child(5) { animation-delay: 0.33s; }
+.category-btn:nth-child(6) { animation-delay: 0.4s; }
+
+.category-icon {
+  width: 90%;
+  height: 90%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.category-btn img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: inline-block;
+}
+
+/* イントロ中はカテゴリを隠す。 */
+body.is-header-intro .category-grid {
+  pointer-events: none;
+}
+
+body.is-header-intro .category-heading {
+  opacity: 0;
+  transform: translateX(-22px);
+}
+
+body.is-header-intro .category-btn {
+  opacity: 0;
+  transform: translateY(14px) scale(0.96);
+}
+
+/* カテゴリ表示後に操作可能にする。 */
+body.is-category-visible .category-grid {
+  pointer-events: auto;
+}
+
+/* 見出しの表示アニメ。 */
+body.is-category-visible .category-heading {
+  animation: infoSlideFade 0.9s ease both;
+}
+
+/* ボタンの段階的表示アニメ。 */
+body.is-category-visible .category-btn {
+  animation: circleFadeUp 0.8s ease both;
+}
+
+/* デモページの簡単な説明エリア。 */
+.demo-note {
+  max-width: 880px;
+  margin: 40px auto 60px;
+  padding: 20px;
+  text-align: center;
+}
+
+.demo-note h1 {
+  font-size: clamp(22px, 3vw, 36px);
+  margin-bottom: 10px;
+}
+
+/* 右からスライドしてフェードイン。 */
+@keyframes slideInRight {
+  from {
+    transform: translateX(100px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* 青い縦線の幅を拡大する。 */
+@keyframes expandStripe {
+  from {
+    width: 0;
+  }
+  to {
+    width: 80px;
+  }
+}
+
+/* dashoffsetを減らして線を描く。 */
+@keyframes drawLine {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* clip-pathで枠線をなぞる。 */
+@keyframes drawBoxBorder {
+  0% {
+    clip-path: polygon(0 0, 0 0, 0 0, 0 0);
+    opacity: 1;
+  }
+  25% {
+    clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+  }
+  50% {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+  75% {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+  100% {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    opacity: 0.5;
+  }
+}
+
+/* 見出しを左からスライドイン。 */
+@keyframes infoSlideFade {
+  0% {
+    opacity: 0;
+    transform: translateX(-22px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ボタンを下から持ち上げて表示。 */
+@keyframes circleFadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(14px) scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ヘッダーを縦オフセットから落ち着かせる。 */
+@keyframes headerIntroSettle {
+  from {
+    transform: translateY(var(--header-intro-offset));
+    opacity: 0.98;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* ヘッダーにイントロアニメを適用。 */
+body.is-header-intro .header-container {
+  animation: headerIntroSettle 1.1s ease-out both;
+}
+
+/* モバイル向けの調整。 */
+@media (max-width: 768px) {
+  .header-container {
+    /* flex-direction: column; */
+    gap: 10px;
+  }
+
+  .header-right {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .category-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
