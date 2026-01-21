@@ -14,11 +14,11 @@ function setupHeaderIntro() {
   
   const headerLeft = document.querySelector(".header-left");
 
-  if (!header || !headerContainer) {
-    // ヘッダーが無い場合は即表示する。
-    revealCategories();
-    return;
-  }
+  // if (!header || !headerContainer) {
+  //   // ヘッダーが無い場合は即表示する。
+  //   revealCategories();
+  //   return;
+  // }
 
   const headerRect = header.getBoundingClientRect();
   const containerRect = headerContainer.getBoundingClientRect();
@@ -74,7 +74,7 @@ function setupHeaderIntro() {
   headerContainer.addEventListener("animationend", onIntroEnd);
 
   // animationendが発火しない場合の保険タイマー。
-  window.setTimeout(revealCategories, 1800);
+  // window.setTimeout(revealCategories, 1800);
 }
 
 if (document.readyState === "loading") {

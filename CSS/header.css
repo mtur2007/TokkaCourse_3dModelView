@@ -58,20 +58,17 @@ header {
 /* タイトル1行目のアニメタイミング。 */
 .fes-main {
   animation: fesFeedIn 1.2s ease-out forwards;
-  animation-delay: 0.1s;
 }
 
 /* タイトル2行目のアニメタイミング。 */
 .fes-sub {
   animation: fesFeedIn 1.6s ease-out forwards;
-  animation-delay: 0.01s;
 }
 
 /* タイトル3行目のアニメタイミング。 */
 .fes-year {
   animation: fesFeedIn 2s ease-out forwards;
-  animation-delay: 0.01s;
-   z-index: 2;
+  z-index: 2;
 }
 
 .fes-main,
@@ -97,19 +94,19 @@ header {
 /* 影文字1行目のアニメタイミング。 */
 .fes-shadow-main {
   animation: fesFeedIn 1.2s ease-out forwards;
-  animation-delay: 0.01s;
+  /* animation-delay: 0.01s; */
 }
 
 /* 影文字2行目のアニメタイミング。 */
 .fes-shadow-sub {
   animation: fesFeedIn 1.6s ease-out forwards;
-  animation-delay: 0.01s;
+  /* animation-delay: 0.01s; */
 }
 
 /* 影文字3行目のアニメタイミング。 */
 .fes-shadow-year {
   animation: fesFeedIn 2s ease-out forwards;
-  animation-delay: 0.01s;
+  /* animation-delay: 0.01s; */
 }
 
 .fes-shadow-main,
@@ -271,12 +268,32 @@ header {
   grid-template-rows: repeat(2, 1fr);
   gap: 20px;
   width: min(720px, 92vw);
-  background: rgba(255, 255, 255, 0.95);
+  background: transparent;
   margin: 20px auto 30px;
   padding: 30px;
   /* background: rgba(18, 21, 28, 0.96); */
   border-radius: 20px;
+  box-shadow: transparent;
+  isolation: isolate;
+}
+
+/* グリッド背景だけフェードインさせる */
+.category-grid::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.95);
   box-shadow: 0 12px 28px rgba(0, 0, 0, 0.6);
+  border-radius: 20px;
+  opacity: 0;
+  animation: categoryBgFade 0.8s ease-out forwards;
+  animation-delay: 1s;
+  z-index: 0;
+}
+
+.category-grid > * {
+  position: relative;
+  z-index: 1;
 }
 
 /* 円形ボタンの基本スタイル。 */
@@ -448,6 +465,15 @@ body.is-category-visible .category-btn {
   100% {
     opacity: 1;
     transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes categoryBgFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 
