@@ -245,8 +245,8 @@ body {
   font-family: "Courier New", Courier, monospace;
   font-size: 13px;
   line-height: 1.5;
-  white-space: pre-wrap;
-  word-wrap: break-word;
+  white-space: pre;
+  word-wrap: normal;
   color: #111;
   pointer-events: none;
   overflow: hidden;
@@ -262,6 +262,7 @@ body {
   caret-color: #111;
   overflow: auto;
   resize: none;
+  white-space: pre;
 }
 
 .html-highlight {
