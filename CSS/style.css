@@ -19,6 +19,34 @@ body {
   line-height: 1.6;
 }
 
+.editor-frame {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  width: min(520px, calc(100vw - 32px));
+  height: min(70vh, 520px);
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.editor-frame__header {
+  padding: 10px 14px;
+  font-weight: 700;
+  background: #f3f4f6;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.editor-frame__iframe {
+  border: none;
+  width: 100%;
+  height: 100%;
+}
+
 .edit-toggle {
   position: fixed;
   top: 16px;

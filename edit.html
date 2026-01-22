@@ -227,25 +227,6 @@
         });
       };
 
-      const applyHtmlStringToShop = (htmlString) => {
-        const parsed = new DOMParser().parseFromString(htmlString, "text/html");
-        const newSection = parsed.body.firstElementChild;
-        if (!newSection || newSection.id !== "shop") {
-          return;
-        }
-        shopSection.replaceWith(newSection);
-        shopSection = newSection;
-      };
-
-      const getReplacedEditorValue = () => {
-        const originalValue = htmlEditor.value;
-        applyFolderUrlsToEditorValue();
-        const replacedValue = htmlEditor.value;
-        htmlEditor.value = originalValue;
-        updateHighlight();
-        return replacedValue;
-      };
-
       const updateImageList = async () => {
         imageList.innerHTML = "";
         clearFolderUrls();
@@ -317,6 +298,9 @@
         } catch (error) {
           createNotice("フォルダを読み込めませんでした。");
         }
+
+        applyFolderUrlsToEditorValue();
+        updateHighlight();
       };
 
       const insertAtCursor = (value) => {
@@ -331,6 +315,7 @@
 
       const updateEditorValue = () => {
         htmlEditor.value = shopSection.outerHTML.trim();
+        applyFolderUrlsToEditorValue();
         updateHighlight();
       };
 
@@ -344,6 +329,8 @@
         tabImages.setAttribute("aria-selected", !isHtml ? "true" : "false");
         if (!isHtml) {
           updateImageList();
+          applyFolderUrlsToEditorValue();
+          updateHighlight();
         }
       };
 
@@ -379,6 +366,8 @@
           folderHandle = await window.showDirectoryPicker();
           folderStatus.textContent = folderHandle.name || "選択済み";
           await updateImageList();
+          applyFolderUrlsToEditorValue();
+          updateHighlight();
         } catch (error) {
           if (error && error.name === "AbortError") {
             return;
@@ -404,22 +393,10 @@
         const APPLY_DELAY_MS = 200;
         setTimeout(async () => {
           await updateImageList();
-          const replacedValue = getReplacedEditorValue();
-          applyHtmlStringToShop(replacedValue);
+          applyFolderUrlsToEditorValue();
+          updateHighlight();
+          localStorage.setItem(STORAGE_KEY, htmlEditor.value);
         }, APPLY_DELAY_MS);
-      });
-
-      window.addEventListener("storage", (event) => {
-        if (event.key !== STORAGE_KEY) {
-          return;
-        }
-        if (!event.newValue) {
-          return;
-        }
-        htmlEditor.value = event.newValue;
-        updateHighlight();
-        const replacedValue = getReplacedEditorValue();
-        applyHtmlStringToShop(replacedValue);
       });
 
       setEditorOpen(false);
