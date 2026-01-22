@@ -19,6 +19,280 @@ body {
   line-height: 1.6;
 }
 
+.edit-toggle {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 2000;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  background: #667eea;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.35);
+}
+
+.edit-toggle:hover {
+  background: #5568d3;
+}
+
+.html-editor-panel {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  width: min(520px, calc(100vw - 32px));
+  max-height: 70vh;
+  display: none;
+  flex-direction: column;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+  z-index: 2000;
+  overflow: hidden;
+}
+
+.html-editor-panel.is-open {
+  display: flex;
+}
+
+.html-editor-header {
+  padding: 12px 16px;
+  font-weight: 700;
+  background: #f3f4f6;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.html-editor-tabs {
+  display: flex;
+  border-bottom: 1px solid #e5e7eb;
+  background: #ffffff;
+}
+
+.html-tab {
+  flex: 1;
+  padding: 10px 12px;
+  border: none;
+  background: transparent;
+  font-weight: 700;
+  cursor: pointer;
+  color: #6b7280;
+}
+
+.html-tab.is-active {
+  color: #111827;
+  border-bottom: 2px solid #667eea;
+}
+
+.html-editor-panels {
+  display: flex;
+  flex: 1;
+  min-height: 240px;
+}
+
+.html-panel {
+  display: none;
+  width: 100%;
+}
+
+.html-panel.is-active {
+  display: flex;
+  flex-direction: column;
+}
+
+.html-editor-tools {
+  padding: 12px 16px;
+  border-bottom: 1px solid #e5e7eb;
+  display: grid;
+  gap: 12px;
+  background: #ffffff;
+}
+
+.html-tool-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.html-tool-status {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.html-tool {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.html-tool input[type="file"] {
+  font-weight: 400;
+}
+
+.html-tool-url {
+  font-weight: 400;
+  gap: 8px;
+}
+
+.html-tool-url input {
+  flex: 1;
+  padding: 8px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+}
+
+.html-tool-button {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 999px;
+  background: #2f855a;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.html-tool-button:hover {
+  background: #276749;
+}
+
+.html-image-list {
+  display: grid;
+  gap: 10px;
+  max-height: 150px;
+  overflow: auto;
+  padding-right: 4px;
+}
+
+.html-image-item {
+  display: grid;
+  grid-template-columns: 40px 1fr auto;
+  align-items: center;
+  gap: 10px;
+}
+
+.html-image-preview {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+}
+
+.html-image-preview.is-missing {
+  opacity: 0.4;
+  filter: grayscale(1);
+}
+
+.html-image-src {
+  font-size: 12px;
+  color: #4b5563;
+  word-break: break-all;
+}
+
+.html-image-remove {
+  padding: 6px 10px;
+  border: none;
+  border-radius: 999px;
+  background: #ef4444;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.html-image-remove:hover {
+  background: #dc2626;
+}
+
+.html-image-empty {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.html-editor-textarea {
+  flex: 1;
+  min-height: 240px;
+  padding: 16px;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  border: none;
+  resize: vertical;
+}
+
+.html-editor-textarea:focus {
+  outline: none;
+}
+
+.html-editor-body {
+  position: relative;
+  flex: 1;
+  min-height: 240px;
+  max-height: 100%;
+  overflow: hidden;
+}
+
+.html-editor-highlight {
+  position: absolute;
+  inset: 0;
+  padding: 16px;
+  margin: 0;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  color: #111;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.html-editor-textarea {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  color: transparent;
+  caret-color: #111;
+  overflow: auto;
+  resize: none;
+}
+
+.html-highlight {
+  background: #fff3b0;
+  color: #8a5b00;
+  padding: 0 2px;
+  border-radius: 3px;
+}
+
+.html-editor-actions {
+  padding: 12px 16px;
+  background: #f3f4f6;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.html-editor-apply {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 999px;
+  background: #667eea;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.html-editor-apply:hover {
+  background: #5568d3;
+}
+
 /* ナビゲーション */
 #banner {
   background: white;
@@ -176,198 +450,6 @@ body {
   margin-top: 60px;
   padding: 0px;
   position: relative;
-}
-
-
-.control-help {
-  display: none;
-  grid-template-columns: max-content max-content max-content;
-
-  column-gap: 8px;
-  row-gap: 6px;
-
-  justify-content: center; /* 全体を中央 */
-  text-align: left;        /* 行は左揃え */
-
-  font-family: system-ui, sans-serif;
-  font-size: 18px;
-  color: #667eea;
-
-  margin: 0 auto 40px;
-  margin-top: 40px;
-}
-
-#main-operation{
-  font-size: clamp(10px,3.7vw, 22px)
-}
-
-.game-operation {
-  text-align: left;
-  width: max-content;
-  margin: 0 auto;
-}
-
-
-/* 1列目（操作名）を少し強調 */
-.control-help > div:nth-child(3n + 1) {
-  font-weight: 600;
-}
-
-#three-section {
-  position: relative;
-  width: 100%;
-  height: 80vh;
-  background: rgba(0,0,0,0.1);
-  border-radius: 15px;
-  /* margin: 10px auto; */
-  max-width: 1200px;
-  overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-}
-
-#three-section.section {
-  padding: 0px;
-  margin: 0 auto 30px;
-   width: calc(100% - 20%);
-}
-
-/* #three-section.banner {
-  position: relative;
-  width: 100%;
-  height: 80vh;
-  max-width: 1200px;
-  border-radius: 15px;
-  margin: 0 auto;
-} */
-
-#three-section.fullscreen {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  max-width: none;
-  border-radius: 0;
-  margin: 0;
-  z-index: 999;
-}
-
-#three-canvas {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-#school-iframe {
-  width: 100%;
-  height: 100%;
-  border: 0;
-  display: none;
-}
-
-/* ボタンスタイル */
-.expand-btn {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  padding: 10px 20px;
-  background: rgba(255,255,255,0.9);
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 16px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-  transition: all 0.3s;
-}
-
-.expand-btn:hover {
-  background: white;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 8px rgba(0,0,0,0.3);
-}
-
-.left-btn {
-  position: absolute;
-  left: 20px;
-  padding: 12px 24px;
-  background: rgba(255,255,255,0.9);
-  border: 2px solid #667eea;
-  border-radius: 25px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: bold;
-  transition: all 0.3s;
-}
-
-.game-select {
-  position: relative;
-  width: min(100%, 1000px);
-  margin: 16px auto 24px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  align-items: center;
-  justify-content: center;
-}
-
-.game-select .left-btn {
-  white-space: nowrap;
-}
-
-.game-select .left-btn {
-  position: static;
-  left: auto;
-}
-
-#toggle-daynight {
-  top: 20px;
-  background: rgba(255,100,100,0.9);
-  color: white;
-  border-color: #ff6b6b;
-}
-
-.left-btn:hover {
-  transform: translateX(5px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-}
-
-/* コントローラー */
-.circle-ctrl-area {
-  position: absolute;
-  border: 3px solid rgba(255,255,255,0.5);
-  border-radius: 50%;
-  background: rgba(0,0,0,0.3);
-}
-
-.circle-ctrl {
-  position: absolute;
-  border: none;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.8);
-  cursor: move;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-}
-
-.control-button {
-  position: absolute;
-  width: 60px;
-  height: 60px;
-  border: none;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.9);
-  font-size: 24px;
-  cursor: pointer;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-  transition: all 0.2s;
-}
-
-.control-button:hover {
-  background: white;
-  transform: scale(1.1);
-}
-
-.control-button:active {
-  transform: scale(0.95);
 }
 
 /* 出し物セクション */
@@ -588,6 +670,25 @@ h2.detail-title{
   font-weight: normal;
   color: #333;
   line-height: 2;
+}
+
+/* 口内案内 */
+.photo-section {
+  background: white;
+  padding: 24px;
+  margin: 20px 0;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  display: flex;
+  justify-content: center;
+}
+
+.photo-section img {
+  width: 100%;
+  max-width: 920px;
+  height: auto;
+  border-radius: 10px;
+  display: block;
 }
 
 /* アクセス */
